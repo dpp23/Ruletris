@@ -1,0 +1,84 @@
+10
+
+dir
+0
+https://subversion.assembla.com/svn/ruletris/ruletris/ruletris
+https://subversion.assembla.com/svn/ruletris
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bbc33a34-36bf-4f74-a9ef-c3945e920e74
+
+JETRIS.DAT
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+src
+dir
+
+
+
+add
+
+bin
+dir
+
+
+
+add
+
+.settings
+dir
+
+
+
+add
+
+oldJetrisMainFrame.java
+file
+
+
+
+add
+
+.classpath
+file
+
+
+
+add
+
+.project
+file
+
+
+
+add
+
