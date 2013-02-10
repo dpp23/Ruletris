@@ -2,7 +2,7 @@
 
 dir
 0
-https://subversion.assembla.com/svn/ruletris/ruletris/ruletris/bin/net/sourceforge/jetris
+https://subversion.assembla.com/svn/ruletris/ruletris/ruletris/src/net/sourceforge/jetris
 https://subversion.assembla.com/svn/ruletris
 add
 
@@ -26,187 +26,12 @@ add
 
 bbc33a34-36bf-4f74-a9ef-c3945e920e74
 
-FigureZ.class
+HTMLLink.java
 file
 
 
 
 add
-
-
-
-
-
-has-props
-has-prop-mods
-
-ResClass.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-TetrisGrid.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-JetrisMainFrame.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-Figure.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-HTMLLink.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-SplashScreen.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-FigureI.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-JetrisMainFrame$TimeThread.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-FigureJ.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-FigureL.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-FigureO.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-JetrisMainFrame$PublishThread.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
 
 io
 dir
@@ -215,7 +40,7 @@ dir
 
 add
 
-FigureS.class
+jetris.ico
 file
 
 
@@ -243,49 +68,7 @@ add
 has-props
 has-prop-mods
 
-jetris.ico
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-FigureT.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
 JetrisMainFrame$2.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-JetrisMainFrame$MenuHandler.class
 file
 
 
@@ -313,7 +96,7 @@ add
 has-props
 has-prop-mods
 
-HTMLLink$1.class
+JetrisMainFrame$4.class
 file
 
 
@@ -328,20 +111,6 @@ has-props
 has-prop-mods
 
 HelpDialog.class
-file
-
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-JetrisMainFrame$4.class
 file
 
 
@@ -396,4 +165,298 @@ add
 
 has-props
 has-prop-mods
+
+TetrisGrid.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+HTMLLink.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+JetrisMainFrame$GridThread.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+FigureFactory.java
+file
+
+
+
+add
+
+FigureI.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+ResClass.java
+file
+
+
+
+add
+
+FigureJ.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+JetrisMainFrame.java
+file
+
+
+
+add
+
+FigureL.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+FigureO.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+JetrisMainFrame$PublishThread.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+FigureS.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+FigureT.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+SplashScreen.java
+file
+
+
+
+add
+
+HTMLLink$1.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+JetrisMainFrame$MenuHandler.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+FigureZ.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+Figures.java
+file
+
+
+
+add
+
+JetrisMainFrame.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+Figure.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+HelpDialog.java
+file
+
+
+
+add
+
+SplashScreen.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+JetrisMainFrame$TimeThread.class
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+TetrisGrid.java
+file
+
+
+
+add
+
+Figure.java
+file
+
+
+
+add
 

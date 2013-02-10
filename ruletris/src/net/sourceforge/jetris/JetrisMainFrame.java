@@ -771,7 +771,11 @@ public class JetrisMainFrame extends JFrame  {
         nextY++;
         nextMove();
     }
-    
+    public synchronized void addFigure()
+    {
+    	 dropNext();
+         nextMove(); 
+    }
     public synchronized void moveDrop() {
         if(isGameOver || isPause) return;
         
@@ -786,8 +790,7 @@ public class JetrisMainFrame extends JFrame  {
         
         tg.addFigure(f);
         paintTG();
-        dropNext();
-        nextMove();   
+         
     }
     
     private synchronized void rotation() {

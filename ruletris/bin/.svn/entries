@@ -2,7 +2,7 @@
 
 dir
 0
-https://subversion.assembla.com/svn/ruletris/ruletris/ruletris/bin
+https://subversion.assembla.com/svn/ruletris/ruletris/ruletris/src
 https://subversion.assembla.com/svn/ruletris
 add
 
@@ -26,14 +26,14 @@ add
 
 bbc33a34-36bf-4f74-a9ef-c3945e920e74
 
-ruletris
+net
 dir
 
 
 
 add
 
-net
+ruletris
 dir
 
 

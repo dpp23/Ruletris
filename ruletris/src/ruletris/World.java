@@ -61,4 +61,12 @@ public class World
 		mf.moveDrop();
 		mf.updateGrid(4);
 	}
+	
+	//moves the next piece onto the grid
+	public void nextPieceOnGrid()
+	{
+		mf.addFigure();
+		mf.updateGrid(4);
+	}
+	
 }

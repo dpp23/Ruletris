@@ -2,7 +2,7 @@
 
 dir
 0
-https://subversion.assembla.com/svn/ruletris/ruletris/ruletris/bin/ruletris
+https://subversion.assembla.com/svn/ruletris/ruletris/ruletris/src/ruletris
 https://subversion.assembla.com/svn/ruletris
 add
 
@@ -26,31 +26,17 @@ add
 
 bbc33a34-36bf-4f74-a9ef-c3945e920e74
 
-Start.class
+World.java
 file
 
 
 
 add
-
-
-
-
-
-has-props
-has-prop-mods
 
-World.class
+Start.java
 file
 
 
 
 add
-
-
-
-
-
-has-props
-has-prop-mods
 

@@ -15,15 +15,14 @@ public class Start {
         world.moveLeft(2);
         world.dropPiece();
         
-        world.rotatePiece(3);
+        //world.rotatePiece(3);
         try {
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        world.moveRight(3);
-        world.dropPiece();
+        world.nextPieceOnGrid();
     }
 
 }
