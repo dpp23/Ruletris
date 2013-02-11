@@ -1,0 +1,7 @@
+/*
+ * A sample script that demonstrates how to control the game.
+ */
+
+Thread.sleep(500);
+
+world.moveRight(2);
