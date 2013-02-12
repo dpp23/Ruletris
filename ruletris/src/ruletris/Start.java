@@ -16,16 +16,24 @@ public class Start {
     		System.out.println();
     	}
     	System.out.println();
-        world.rotatePiece(2);
+       
         try {
+        	Thread.sleep(2000);
+        	world.rotatePiece(2);
 			Thread.sleep(1000);
+			//world.moveLeft(2);
+			Thread.sleep(1000);
+			//world.dropPiece();
+		    Thread.sleep(1000);
+		    //world.nextPieceOnGrid();
+		    Thread.sleep(1000);
+		    System.out.print(world.rotatePiece(3));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        world.moveLeft(2);
-        world.dropPiece();
-        world.dropPiece();
+        
+       
         temp = world.getCurrentPiece();
     	for(int k=0;k<4; k++)
     	{
@@ -34,15 +42,6 @@ public class Start {
     		System.out.println();
     	}
     	System.out.println();
-        //world.rotatePiece(3);
-        try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        world.nextPieceOnGrid();
-        //world.dropPiece();
     }
 
 }

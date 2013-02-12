@@ -38,6 +38,7 @@ public class World
 			mf.getCurrentFigure().rotationRight();
 			mf.updateGrid(1);
 		}
+		
 		return true;
 	}
 
@@ -48,8 +49,8 @@ public class World
 		for(int i=0; i < m; i++)
 		{
 			mf.moveLeft();
-			mf.updateGrid(1);
 		}
+		mf.updateGrid(1);
 		return true;
 	}
 	
@@ -60,8 +61,8 @@ public class World
 		for(int i=0; i < m; i++)
 		{	
 			mf.moveRight();
-			mf.updateGrid(1);
 		}
+		mf.updateGrid(1);
 		return true;
 	}
 

@@ -815,7 +815,7 @@ public class JetrisMainFrame extends JFrame  {
             for (int j = 0; j < 10; j++) {
                 tg.gLines.get(i)[j] = 0;
                 cells[i][j].setBackground(Color.WHITE);
-                cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+                //cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             }
         } 
         ff.resetCounts();
