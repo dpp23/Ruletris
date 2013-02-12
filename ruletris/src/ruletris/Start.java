@@ -42,7 +42,7 @@ public class Start {
 			e.printStackTrace();
 		}
         world.nextPieceOnGrid();
-        world.dropPiece();
+        //world.dropPiece();
     }
 
 }

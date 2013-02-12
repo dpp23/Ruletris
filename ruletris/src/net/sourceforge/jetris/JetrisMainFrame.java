@@ -203,7 +203,7 @@ public class JetrisMainFrame extends JFrame  {
         };
         //addKeyListener(keyHandler); Manual control ommited
         
-        pH = new PublishHandler();
+        //pH = new PublishHandler();
         
         font = new Font("Dialog", Font.PLAIN, 12);
         tg = new TetrisGrid();
@@ -227,9 +227,9 @@ public class JetrisMainFrame extends JFrame  {
         fNext = ff.getRandomFigure();
         dropNext();
         
-        tt = new TimeThread();
+        //tt = new TimeThread();
         
-        tt.start();
+        //tt.start();
 
         addWindowFocusListener(new WindowFocusListener(){
 
@@ -638,7 +638,7 @@ public class JetrisMainFrame extends JFrame  {
         }
     }
     
-    private synchronized void nextMove() {
+    private void nextMove() {
         f.setOffset(nextX, nextY);
         
         if(tg.addFigure(f)) {
@@ -766,17 +766,17 @@ public class JetrisMainFrame extends JFrame  {
         }
     }
     
-    private synchronized void moveDown() {
+    private void moveDown() {
         if(isGameOver || isPause) return;
         nextY++;
         nextMove();
     }
-    public synchronized void addFigure()
+    public void addFigure()
     {
     	 dropNext();
          nextMove(); 
     }
-    public synchronized void moveDrop() {
+    public void moveDrop() {
         if(isGameOver || isPause) return;
         
         f.offsetYLast = f.offsetY;
@@ -793,7 +793,7 @@ public class JetrisMainFrame extends JFrame  {
          
     }
     
-    private synchronized void rotation() {
+    private  void rotation() {
         if(isGameOver || isPause) return;
         for (int j = 0; j < f.arrX.length; j++) {
             cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBackground(Color.WHITE);
@@ -806,7 +806,7 @@ public class JetrisMainFrame extends JFrame  {
         nextMove();
     }
     
-    private synchronized void pause() {
+    private  void pause() {
         isPause = !isPause;
     }
 
@@ -822,7 +822,7 @@ public class JetrisMainFrame extends JFrame  {
         isGameOver = false;
         isPause = false;
         fNext = ff.getRandomFigure();
-        tt.resetTime();
+        //tt.resetTime();
         time.setText("00:00:00");
         tg.resetStats();
         dropNext();
