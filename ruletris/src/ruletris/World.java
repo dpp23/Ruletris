@@ -36,7 +36,7 @@ public class World
 		for(int i = 0; i < r; i++)
 		{
 			mf.getCurrentFigure().rotationRight();
-			mf.updateGrid(4);
+			mf.updateGrid(1);
 		}
 		return true;
 	}
@@ -48,7 +48,7 @@ public class World
 		for(int i=0; i < m; i++)
 		{
 			mf.moveLeft();
-			mf.updateGrid(4);
+			mf.updateGrid(1);
 		}
 		return true;
 	}
@@ -60,7 +60,7 @@ public class World
 		for(int i=0; i < m; i++)
 		{	
 			mf.moveRight();
-			mf.updateGrid(4);
+			mf.updateGrid(1);
 		}
 		return true;
 	}
@@ -69,7 +69,7 @@ public class World
 	{
 		if(!isPieceNotDropped)return false;
 		mf.moveDrop();
-		mf.updateGrid(4);
+		mf.updateGrid(1);
 		isPieceNotDropped = false;
 		return true;
 	}
@@ -79,7 +79,7 @@ public class World
 	{
 		if(isPieceNotDropped) dropPiece();
 		mf.addFigure();
-		mf.updateGrid(4);
+		mf.updateGrid(1);
 		isPieceNotDropped = true;
 		return true;
 	}
