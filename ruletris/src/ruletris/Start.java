@@ -18,13 +18,19 @@ public class Start {
     	System.out.println();
        
         try {
-        	world.moveLeft(1);
+        	world.moveLeft(4);
         	Thread.sleep(2000);
-			world.moveLeft(4);
+			world.rotatePiece(1);
 			Thread.sleep(2000);
 			world.dropPiece();
 		    Thread.sleep(1000);
-		    //world.nextPieceOnGrid();
+		    world.nextPieceOnGrid();
+		    Thread.sleep(1000);
+		    world.moveLeft(4);
+        	Thread.sleep(2000);
+			world.rotatePiece(1);
+			Thread.sleep(2000);
+			world.dropPiece();
 		    Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

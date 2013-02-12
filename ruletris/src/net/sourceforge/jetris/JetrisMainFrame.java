@@ -161,7 +161,9 @@ public class JetrisMainFrame extends JFrame  {
                   }
                   else
                   {
-                            //Thread.sleep(50);
+                	 paintTG();
+                	 paintNewPosition();
+                            //TODO: draw piece
                   }
                   count += 50;
                   if(count + 50*tg.getLevel() >= 1100)
