@@ -35,7 +35,7 @@ public class World
 		if(!isPieceNotDropped)return false;
 		for(int i = 0; i < r; i++)
 		{
-			mf.getCurrentFigure().rotationRight();
+			if(!mf.rotationTry())return false;
 			mf.updateGrid(1);
 		}
 		

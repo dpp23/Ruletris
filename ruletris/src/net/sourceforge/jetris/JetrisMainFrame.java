@@ -646,7 +646,7 @@ public class JetrisMainFrame extends JFrame  {
         if(tg.addFigure(f)) {
             dropNext();
             f.setOffset(nextX, nextY);
-            paintTG();
+            //paintTG();
         } else {
             clearOldPosition();
         }
@@ -795,6 +795,15 @@ public class JetrisMainFrame extends JFrame  {
          
     }
     
+    public boolean rotationTry()
+    {
+    	f.rotationRight();
+        if(!tg.isNextMoveValid(f,f.offsetX,f.offsetY)) {
+            f.rotationLeft();
+            return false;
+        }
+        return true;
+    }
     private  void rotation() {
         if(isGameOver || isPause) return;
         for (int j = 0; j < f.arrX.length; j++) {
