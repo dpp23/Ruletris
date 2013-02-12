@@ -50,7 +50,7 @@ public class World
 			mf.moveLeft();
 			mf.updateGrid(4);
 		}
-		return false;
+		return true;
 	}
 	
 	//Moves the current piece m squares to the right
