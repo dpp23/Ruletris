@@ -77,7 +77,7 @@ public class World
 	//moves the next piece onto the grid
 	public boolean nextPieceOnGrid()
 	{
-		if(isPieceNotDropped)return false;
+		if(isPieceNotDropped) dropPiece();
 		mf.addFigure();
 		mf.updateGrid(4);
 		isPieceNotDropped = true;
