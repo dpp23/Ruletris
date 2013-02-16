@@ -41,7 +41,7 @@ public class JetrisMainFrame extends JFrame  {
     private int nextY;
     private Figure f;
     private Figure fNext;
-    private FigureFactory ff;
+    public FigureFactory ff;
     private boolean isNewFigureDroped;
     private boolean isGameOver;
     private boolean isPause;
@@ -233,14 +233,14 @@ public class JetrisMainFrame extends JFrame  {
         
         //tt.start();
 
-        addWindowFocusListener(new WindowFocusListener(){
+      /*  addWindowFocusListener(new WindowFocusListener(){
 
             public void windowGainedFocus(WindowEvent arg0) {}
 
             public void windowLostFocus(WindowEvent arg0) {
                 isPause = true;
             }
-        });
+        });*/
         
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -252,6 +252,15 @@ public class JetrisMainFrame extends JFrame  {
     public Figure getFigure()
     {
     	return fNext;
+    }
+    public void setNextFigure(Figure a)
+    {
+    	fNext = a;
+    	showNext(fNext);
+    }
+    public void setCurrentFigure(Figure a)
+    {
+    	f = a;
     }
     public Figure getCurrentFigure()
     {
@@ -481,7 +490,7 @@ public class JetrisMainFrame extends JFrame  {
         restartBut.addKeyListener(keyHandler);
         restartBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                restart();
+                //restart();
             }
         });
         d = new Dimension(90, 30);
@@ -502,7 +511,7 @@ public class JetrisMainFrame extends JFrame  {
         pauseBut.setFocusable(false);
         pauseBut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                pause();
+                //pause();
             }
         });
         pauseBut.setMinimumSize(d);
@@ -653,6 +662,8 @@ public class JetrisMainFrame extends JFrame  {
         paintNewPosition();
         
         if(isGameOver) {
+        	JOptionPane.showMessageDialog(this, "GAME OVER!");
+        	/*
             int tmp = tg.updateHiScore();
             if(tmp >= 0) {
                 
@@ -670,7 +681,8 @@ public class JetrisMainFrame extends JFrame  {
                 
                 if(tmp == 0)
                     hiScoreLabel.setText(""+tg.hiScore[0].score);
-            } 
+            } */
+        	
         } 
     }
     
@@ -826,7 +838,7 @@ public class JetrisMainFrame extends JFrame  {
             for (int j = 0; j < 10; j++) {
                 tg.gLines.get(i)[j] = 0;
                 cells[i][j].setBackground(Color.WHITE);
-                //cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+                cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             }
         } 
         ff.resetCounts();

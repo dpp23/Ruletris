@@ -18,21 +18,41 @@ public class Start {
     	System.out.println();
        
         try {
+        	int t [][] = 
+         	   { {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},	
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,1,0,0,0,0,0,0},
+         		 {0,0,0,1,0,0,0,0,0,0},
+         		 {0,0,0,1,0,0,0,0,0,0}};
+         	Thread.sleep(500);
+         	world.setGrid(t);
         	while(true){
-        	world.moveLeft(4);
+        	world.setCurrentFigure(5);
+        	world.setNextFigure(0);
         	Thread.sleep(500);
-			world.rotatePiece(1);
+        	//world.moveLeft(4);
+        	Thread.sleep(500);
+			//world.rotatePiece(1);
 			Thread.sleep(500);
 			world.dropPiece();
 		    Thread.sleep(500);
 		    world.nextPieceOnGrid();
-		    Thread.sleep(500);
-		    world.moveLeft(4);
-        	Thread.sleep(500);
-			world.rotatePiece(1);
-			Thread.sleep(500);
-			world.dropPiece();
-		    Thread.sleep(500);}
+        	}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -46,6 +46,13 @@ public class TetrisGrid implements Serializable{
         } 
     }
     
+    public void setGrid(int arr[][])
+    {
+    	for(int i=0; i<20; i++)
+    	{
+    		gLines.set(i,arr[i]);
+    	}
+    }
     public int[][] toArray()
     {
     	int [][] temp = new int[20][10];

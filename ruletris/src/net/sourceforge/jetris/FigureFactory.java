@@ -42,6 +42,29 @@ public class FigureFactory {
         
         return f;
     }
+    public Figure getFigure(int i) {
+        Figure f;
+        switch (i) {
+        case 0: f = new FigureI(); break;
+        case 1: f = new FigureT(); break;
+        case 2: f = new FigureO(); break;
+        case 3: f = new FigureL(); break;
+        case 4: f = new FigureJ(); break;
+        case 5: f = new FigureS(); break;
+        default: f = new FigureZ(); break;
+        }
+        lastLastOne = lastOne;
+        lastOne = i+1;
+        counts[i]++;
+         
+        i = r.nextInt(4);
+
+        for (int j = 0; j < i; j++) {
+            f.rotationRight();
+        }
+        
+        return f;
+    }
     
     protected int[] getCounts() {
         return counts;
