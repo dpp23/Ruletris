@@ -49,6 +49,7 @@ public class JetrisMainFrame extends JFrame  {
     private TimeThread tt;
     private KeyListener keyHandler;
     
+   
     private JPanel about;
     
     //MENU
@@ -141,6 +142,10 @@ public class JetrisMainFrame extends JFrame  {
             return sb.toString();
         }
     }
+    public boolean isGameOver()
+    {
+    	return isGameOver;
+    }
     public void updateGrid(int n)
     {
     	while (n>0)
@@ -226,8 +231,8 @@ public class JetrisMainFrame extends JFrame  {
         this.setResizable(false);
 
         
-        fNext = ff.getRandomFigure();
-        dropNext();
+        fNext = ff.getFigure(-1);
+        //dropNext();
         
         //tt = new TimeThread();
         
@@ -648,13 +653,15 @@ public class JetrisMainFrame extends JFrame  {
             return null;
         }
     }
-    
-    private void nextMove() {
+    //returns true if the piece falls to the ground
+    public boolean nextMove() {
+    	boolean res = false; 
         f.setOffset(nextX, nextY);
         
         if(tg.addFigure(f)) {
-            dropNext();
-            f.setOffset(nextX, nextY);
+            //dropNext();
+        	return true;
+           // f.setOffset(nextX, nextY);
             //paintTG();
         } else {
             clearOldPosition();
@@ -684,6 +691,7 @@ public class JetrisMainFrame extends JFrame  {
             } */
         	
         } 
+        return res;
     }
     
     private void clearOldPosition() {
@@ -700,7 +708,7 @@ public class JetrisMainFrame extends JFrame  {
         } 
     }
     
-    private void paintTG() {
+    public void paintTG() {
         int i = 0;
         Color c;
         for (int[] arr : tg.gLines) {
@@ -741,7 +749,11 @@ public class JetrisMainFrame extends JFrame  {
     }
     
     private void dropNext() {
-        if(isGameOver) return;
+        if(isGameOver)
+        {
+        	JOptionPane.showMessageDialog(this, "GAME OVER!");
+        	return;
+        }
         nextX = 4;
         nextY = 0;
 
@@ -780,10 +792,10 @@ public class JetrisMainFrame extends JFrame  {
         }
     }
     
-    private void moveDown() {
-        if(isGameOver || isPause) return;
+    public boolean moveDown() {
+        if(isGameOver || isPause) return false;
         nextY++;
-        nextMove();
+        return nextMove();
     }
     public void addFigure()
     {

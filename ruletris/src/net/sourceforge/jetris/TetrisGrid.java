@@ -63,6 +63,7 @@ public class TetrisGrid implements Serializable{
     }
     
     boolean addFigure(Figure f) {
+    	if (f.arrX[0] == 4) return true; //case FigureNONE
         for (int j = 0; j < f.arrX.length; j++) {
             if(f.arrY[j]+f.offsetY >= 20) {
                 f.setOffset(f.offsetXLast,f.offsetYLast);

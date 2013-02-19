@@ -10,6 +10,7 @@ public abstract class Figure {
     protected final static int J = 5;
     protected final static int S = 6;
     protected final static int Z = 7;
+    protected final static int NONE = 0;
     
     protected final static Color COL_I = Color.RED;
     protected final static Color COL_T = Color.GRAY;
@@ -18,7 +19,9 @@ public abstract class Figure {
     protected final static Color COL_J = Color.MAGENTA;
     protected final static Color COL_S = Color.BLUE;
     protected final static Color COL_Z = Color.GREEN;
-
+    protected final static Color COL_NONE = Color.WHITE;
+    
+    
     protected int[] arrX;
     protected int[] arrY;
     
@@ -43,13 +46,22 @@ public abstract class Figure {
         return r+offsetX;
     }
     
-    protected void setOffset(int x, int y) {
+    public void setOffset(int x, int y) {
         offsetXLast = offsetX;
         offsetYLast = offsetY; 
         offsetX = x;
         offsetY = y;
     }
+   
     
+    public int getYoffset()
+    {
+    	return offsetY;
+    }
+    public int getXoffset()
+    {
+    	return offsetX;
+    }
     protected void resetOffsets() {
         offsetX = offsetY = offsetXLast = offsetYLast = 0;
     }
