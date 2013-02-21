@@ -1,23 +1,29 @@
 package ruletris;
 
-import java.awt.Component;
 
-import javax.swing.JOptionPane;
 
 import net.sourceforge.jetris.*;
 
 public class World
 {
-	private JetrisMainFrame mf;
+	private final JetrisMainFrame mf;
 	private boolean isPieceDropped;
 	private boolean isGameOver;
-	public World()
+	public World(JetrisMainFrame newMf)
 	{
+		mf = newMf;
 		isPieceDropped = false;
 		isGameOver = false;
-		mf = new JetrisMainFrame();
 		nextPieceOnGrid();
 		isPieceDropped = false;
+	}
+	
+	/*
+	 * Let the callback tell us when the game is over. 
+	 */
+	public void gameOver(boolean gameState)
+	{
+		isGameOver = gameState;
 	}
 	
 	//the following two methods return respectfully the X and Y offset of the current piece
@@ -162,8 +168,7 @@ public class World
 		mf.addFigure();
 		mf.updateGrid(1);
 		isPieceDropped = true;
-		isGameOver = mf.isGameOver();
-		if(isGameOver)JOptionPane.showMessageDialog(null, "GAME OVER!");
+		//isGameOver = mf.isGameOver();
 		return true;
 	}
 	

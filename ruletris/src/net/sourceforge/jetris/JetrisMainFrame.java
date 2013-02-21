@@ -4,25 +4,32 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.text.html.HTML;
+import java.awt.*;
+import java.io.*;
+import javax.swing.text.*;
+
+import ruletris.GameGenerator;
+import ruletris.LevelStep;
+import ruletris.Start;
 
 
-
+import net.miginfocom.swing.MigLayout;
 import net.sourceforge.jetris.io.PublishHiScore;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.io.BufferedInputStream;
 
-public class JetrisMainFrame extends JFrame  {
+public class JetrisMainFrame extends JFrame implements ActionListener {
     
-    private static final String NAME = "RULETRIS 0.1";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String NAME = "RULETRIS 0.1";
     private static final int CELL_H = 24;
     
     private Font font;
@@ -67,6 +74,104 @@ public class JetrisMainFrame extends JFrame  {
     private PublishHandler pH;
     private int count =0;
     
+    
+    /*
+     *  ------------- Added by oeb21 -------------
+     */
+    
+    private GameGenerator parent;
+    
+	private String currentFile = "Untitled";
+	private boolean changed = false;
+
+	
+	private JEditorPane editArea = new JEditorPane();
+	private JTextArea helpArea = new JTextArea(15,100);
+	
+	
+    JButton prevHelpButton = new JButton("Prev");
+    JButton nextHelpButton = new JButton("Next");
+    JButton nextLevelButton = new JButton("Next Level");
+	
+	private JFileChooser dialog = new JFileChooser(System.getProperty("user.dir"));
+	private String currentDoc = "default";
+	private boolean fileChanged = false;
+		
+	
+	/*
+	 * -----------end of added by Ollie----------------
+	 */
+	
+	
+	Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
+		public void actionPerformed(ActionEvent e) 
+		{
+				newFile();
+		}
+	};
+	
+	Action Open = new AbstractAction("Open", new ImageIcon("open.gif")) {
+		public void actionPerformed(ActionEvent e) {
+			saveOld();
+			if(dialog.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
+				readInFile(dialog.getSelectedFile().getAbsolutePath());
+			}
+			SaveAs.setEnabled(true);
+		}
+	};
+	
+	
+	Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
+		public void actionPerformed(ActionEvent e) {
+			if(!currentFile.equals("Untitled"))
+				saveFile(currentFile);
+			else
+				saveFileAs();
+		}
+	};
+	
+
+	
+	Action SaveAs = new AbstractAction("Save as...") {
+		public void actionPerformed(ActionEvent e) {
+			saveFileAs();
+		}
+	};
+	
+	Action Compile = new AbstractAction("Compile") {
+		public void actionPerformed(ActionEvent e) {
+			compileCode();
+		}
+	};
+	
+	
+	Action nextHelp = new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+			getNextHelp();
+		}
+	};
+	
+	Action prevHelp = new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+			getPrevHelp();
+		}
+	};
+	Action nextLevel = new AbstractAction("Next Level") {
+		public void actionPerformed(ActionEvent e) {
+			getNextLevel();
+		}
+	};
+	
+	
+	ActionMap m = editArea.getActionMap();
+	Action Cut = m.get(DefaultEditorKit.cutAction);
+	Action Copy = m.get(DefaultEditorKit.copyAction);
+	Action Paste = m.get(DefaultEditorKit.pasteAction);
+	
+	
+	/*
+	 * -------------------------------------------
+	 */
    
     
     private class TimeThread extends Thread {
@@ -180,9 +285,11 @@ public class JetrisMainFrame extends JFrame  {
             }
         }
     }
-    public JetrisMainFrame() {
+    public JetrisMainFrame(GameGenerator gameGenerator) {
         super(NAME);
         
+        
+        parent = gameGenerator; 
         SplashScreen sp = new SplashScreen();
         
         setIconImage(loadImage("jetris16x16.png"));
@@ -219,41 +326,320 @@ public class JetrisMainFrame extends JFrame  {
         
         initMenu();
 
+    	// GAME PANEL 
         JPanel all = new JPanel(new BorderLayout());
         all.add(getStatPanel(), BorderLayout.WEST);
         all.add(getPlayPanel(), BorderLayout.CENTER);
         all.add(getMenuPanel(), BorderLayout.EAST);
         all.add(getCopyrightPanel(), BorderLayout.SOUTH);
+     
 
+/*
+ * ------------------------------ TEXT PANEL -------------------------------
+ */
+
+        JPanel buttonEditPanel = new JPanel(new MigLayout("wrap 3"));
+        buttonEditPanel.setBackground(Color.GRAY);
+           
+        JPanel textEditorPanel = new JPanel(new BorderLayout());
+        textEditorPanel.setBackground(Color.GRAY);
+        
+    //    editArea.setLineWrap(false);
+        editArea.setFont(new Font("Monospaced",Font.PLAIN,12));
+        
+        JScrollPane scroll = new JScrollPane(editArea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        
+        JToolBar tool = new JToolBar();
+		
+		JButton new_b = tool.add(New), 
+				ope_b = tool.add(Open),
+				sav_b = tool.add(Save);
+		
+		tool.addSeparator();
+		
+		JButton cut_b = tool.add(Cut), 
+				cop_b = tool.add(Copy),
+				pas_b = tool.add(Paste);
+		
+		
+		new_b.setText(null); new_b.setIcon(new ImageIcon("icons/new.png"));
+		ope_b.setText(null); ope_b.setIcon(new ImageIcon("icons/open.png"));
+		sav_b.setText(null); sav_b.setIcon(new ImageIcon("icons/save.png"));
+			
+		cut_b.setText(null); cut_b.setIcon(new ImageIcon("icons/cut.png"));
+		cop_b.setText(null); cop_b.setIcon(new ImageIcon("icons/copy.png"));
+		pas_b.setText(null); pas_b.setIcon(new ImageIcon("icons/paste.png"));
+		
+		Save.setEnabled(false);
+		SaveAs.setEnabled(false);
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pack();
+		editArea.addKeyListener(k1);
+
+		textEditorPanel.add(tool,BorderLayout.NORTH);
+		textEditorPanel.add(scroll,BorderLayout.CENTER);
+		
+		
+		// ....................ALL BUTTONS FROM HERE ON........................
+        
+        JButton bugButton = new JButton("Check For Errors");
+        bugButton.setMnemonic('O');
+    
+        //Cancel button
+        JButton compileButton = new JButton("Compile");
+        compileButton.setMnemonic('C');
+        compileButton.setAction(Compile);
+        
+        //Cancel button
+        JButton hideButton = new JButton("Hide Game");
+        hideButton.setMnemonic('C');
+        
+        buttonEditPanel.add(bugButton);   // Wrap to next row
+        buttonEditPanel.add(compileButton)  ; // Wrap to next row
+        buttonEditPanel.add(hideButton, "wrap");   // Wrap to next row
+		
+        
+        bugButton.setIcon(new ImageIcon("icons/bug.png"));
+        compileButton.setIcon(new ImageIcon("icons/compile.png"));
+        hideButton.setIcon(new ImageIcon("icons/hide.png"));
+        
+		textEditorPanel.add(buttonEditPanel,BorderLayout.SOUTH);
+
+/*
+ * --------------------------------------------------------------------------
+ */
+		
+		//Help Panel....
+		JPanel HelpPanel = new JPanel(new MigLayout("wrap 1"));
+		JPanel helpButtonPanel = new JPanel(new MigLayout("wrap 1"));
+
+		helpButtonPanel.add(prevHelpButton, "cell 0 0");
+		helpButtonPanel.add(nextHelpButton, "cell 2 0");   // Wrap to next row
+		helpButtonPanel.add(nextLevelButton, "cell 1 1 1 1"); 
+		
+		
+		prevHelpButton.setAction(prevHelp);
+		nextHelpButton.setAction(nextHelp);
+		nextLevelButton.setAction(nextLevel);
+		
+		prevHelpButton.setEnabled(false);
+		
+		
+		prevHelpButton.setIcon(new ImageIcon("icons/left.png"));
+		nextHelpButton.setIcon(new ImageIcon("icons/right.png"));
+        
+		LevelStep first = parent.getCurrentHelp();
+		if (first != null)
+		{
+			helpArea.setText(first.getHelpText());
+			editArea.setText(editArea.getText()+first.getInjectCode());
+			
+			if(first.isLast())
+			{
+				nextHelpButton.setEnabled(false);
+				nextLevelButton.setEnabled(true);
+			}
+			else
+			{
+				nextLevelButton.setEnabled(false);
+			}
+			
+		}
+		else
+		{
+			helpArea.setText("There is no help for this level. You are on your own!");
+			nextLevelButton.setEnabled(true);
+		}
+		
+		//helpArea.setEnabled(false);   // This greys out the whole thing which does not look very nice. 
+		helpArea.setLineWrap(true);
+        helpArea.setFont(new Font("Monospaced",Font.ROMAN_BASELINE,15));
+		JScrollPane helpscroll = new JScrollPane(helpArea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        HelpPanel.add(helpscroll, "span");   // Span without "count" means span whole row.
+		HelpPanel.add(helpButtonPanel)  ;    // Wrap to next row
+		
+		
+        // Putting it all togethher. 
+        JPanel panel = new JPanel(new MigLayout("fillx,insets 3"));
+
+        panel.add(all);
+        panel.add(textEditorPanel, "width :500:,grow,push");  // or grow
+        //  panel.add(EditPanel, "width :500:,grow,push");  // or grow
+        panel.add(HelpPanel, "width :200:");  // or grow
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.getContentPane().add(all, BorderLayout.CENTER);
+        this.getContentPane().add(panel, BorderLayout.CENTER);
         pack();
-        this.setResizable(false);
+        this.setResizable(true);
+        
+        fNext = ff.getFigure(0);
 
-        
-        fNext = ff.getFigure(-1);
-        //dropNext();
-        
-        //tt = new TimeThread();
-        
-        //tt.start();
-
-      /*  addWindowFocusListener(new WindowFocusListener(){
-
-            public void windowGainedFocus(WindowEvent arg0) {}
-
-            public void windowLostFocus(WindowEvent arg0) {
-                isPause = true;
-            }
-        });*/
-        
-        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
         setVisible(true);
         sp.setVisible(false);
         sp.dispose();
     }
+    
+    private KeyListener k1 = new KeyAdapter() {
+		public void keyPressed(KeyEvent e) {
+			changed = true;
+			Save.setEnabled(true);
+			SaveAs.setEnabled(true);
+		}
+	};
+    
+	private void saveFileAs() {
+		if(dialog.showSaveDialog(null)==JFileChooser.APPROVE_OPTION)
+			saveFile(dialog.getSelectedFile().getAbsolutePath());
+	}
+	
+	private void saveOld() {
+		if(changed) {
+			if(JOptionPane.showConfirmDialog(this, "Would you like to save "+ currentFile +" ?","Save",JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION)
+				saveFile(currentFile);
+		}
+	}
+	
+	private void readInFile(String fileName) {
+		try {
+			FileReader r = new FileReader(fileName);
+			editArea.read(r,null);
+			r.close();
+			currentFile = fileName;
+			setTitle(currentFile);
+			changed = false;
+		}
+		catch(IOException e) {
+			Toolkit.getDefaultToolkit().beep();
+			JOptionPane.showMessageDialog(this,"Editor can't find the file called "+fileName);
+		}
+	}
+	
+	private void saveFile(String fileName) {
+		try {
+			FileWriter w = new FileWriter(fileName);
+			editArea.write(w);
+			w.close();
+			currentFile = fileName;
+			setTitle(currentFile);
+			changed = false;
+			Save.setEnabled(false);
+		}
+		catch(IOException e) {
+		}
+	}
+	
+	
+	private void newFile()
+	{
+		if(JOptionPane.showConfirmDialog(this, "Sure you want to create a new document?"   ,"Yes" ,JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION)
+		{	
+			saveFileAs();
+			editArea.setText("");
+			SaveAs.setEnabled(true);
+			currentFile = "default";
+			setTitle(currentFile);	
+		}
+	}
+	
+	private void compileCode() {
+			if(currentFile == "default")
+			{
+				JOptionPane.showMessageDialog(this, "You must save the file before compiling");
+				saveFileAs();
+			}
+			else 
+			{
+				saveOld();
+			}
+			restart();
+			parent.runFullWorld(currentFile);
+	}
+    
+	private void getNextHelp() {
+
+		LevelStep newHelp = parent.getNextHelp();
+		
+		if(newHelp != null)
+		{
+			helpArea.setText("");
+			helpArea.setText(newHelp.getHelpText());
+			editArea.setText(editArea.getText()+newHelp.getInjectCode());
+			
+
+			if(newHelp.isLast())
+			{
+				nextHelpButton.setEnabled(false);
+				nextLevelButton.setEnabled(true);
+			}
+			if(!newHelp.isFirst())
+			{
+				prevHelpButton.setEnabled(true);
+			}
+		}
+}
+	
+	
+	private void getPrevHelp() 
+	{		
+		LevelStep newHelp = parent.getPrevHelp();
+	
+		if(newHelp != null)
+		{
+			helpArea.setText("");
+			helpArea.setText(newHelp.getHelpText());
+		
+			if(newHelp.isFirst())
+			{
+				prevHelpButton.setEnabled(false);
+			}
+			if(!newHelp.isLast())
+			{
+				nextHelpButton.setEnabled(true);
+				nextLevelButton.setEnabled(false);
+			}
+		}
+	}
+	
+	private void getNextLevel()
+	{
+		if(parent.getNewLevel())
+		{
+			LevelStep first = parent.getCurrentHelp();
+			if (first != null)
+			{
+				helpArea.setText(first.getHelpText());
+				prevHelpButton.setEnabled(false);
+				if(first.isLast())
+				{
+					nextHelpButton.setEnabled(false);
+					nextLevelButton.setEnabled(true);
+				}
+				else
+				{
+					nextLevelButton.setEnabled(false);
+					nextHelpButton.setEnabled(true);
+				}
+			}
+			else
+			{
+				nextLevelButton.setEnabled(true);
+				helpArea.setText("There is no help for this level. You are on your own!");
+			}	
+		}
+		else
+		{
+			helpArea.setText("There are no more levels.");
+			nextLevelButton.setEnabled(false);
+			nextHelpButton.setEnabled(false);
+			prevHelpButton.setEnabled(false);
+		}
+	}
+	
+	
     public Figure getFigure()
     {
     	return fNext;
@@ -668,29 +1054,6 @@ public class JetrisMainFrame extends JFrame  {
         }
         paintNewPosition();
         
-        if(isGameOver) {
-        	JOptionPane.showMessageDialog(this, "GAME OVER!");
-        	/*
-            int tmp = tg.updateHiScore();
-            if(tmp >= 0) {
-                
-                String  s;
-                
-                do {
-                    s = JOptionPane.showInputDialog(this,"Enter Your Name...\nMust be between 1 and 10 charachters long","New HiScore "+(tmp+1)+". Place", JOptionPane.PLAIN_MESSAGE);
-                } while (s != null && (s.length() < 1 || s.length() > 10));
-                
-                if(s == null) {
-                    s = "<empty>";
-                }
-                
-                tg.saveHiScore(s,tmp);
-                
-                if(tmp == 0)
-                    hiScoreLabel.setText(""+tg.hiScore[0].score);
-            } */
-        	
-        } 
         return res;
     }
     
@@ -750,8 +1113,9 @@ public class JetrisMainFrame extends JFrame  {
     
     private void dropNext() {
         if(isGameOver)
-        {
+        {  	
         	JOptionPane.showMessageDialog(this, "GAME OVER!");
+        	parent.gameOver();
         	return;
         }
         nextX = 4;
@@ -799,8 +1163,8 @@ public class JetrisMainFrame extends JFrame  {
     }
     public void addFigure()
     {
-    	 dropNext();
-         nextMove(); 
+    		 dropNext();
+    		 nextMove(); 
     }
     public void moveDrop() {
         if(isGameOver || isPause) return;
@@ -915,9 +1279,9 @@ public class JetrisMainFrame extends JFrame  {
     private void showHiScore() {
         setHiScorePanel();
         
-        JOptionPane.showMessageDialog(this,hiScorePanel,"HI SCORE", 
-                JOptionPane.PLAIN_MESSAGE, 
-                new ImageIcon(loadImage("jetris32x32.png")));
+     //   JOptionPane.showMessageDialog(this,hiScorePanel,"HI SCORE", 
+     //           JOptionPane.PLAIN_MESSAGE, 
+     //           new ImageIcon(loadImage("jetris32x32.png")));
         
         hiScorePanel = null;
     }
@@ -1014,4 +1378,9 @@ public class JetrisMainFrame extends JFrame  {
             }
         }
     }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

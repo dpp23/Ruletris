@@ -51,18 +51,11 @@ public class FigureFactory {
         case 3: f = new FigureL(); break;
         case 4: f = new FigureJ(); break;
         case 5: f = new FigureS(); break;
-        case -1: f = new FigureNone();break;
         default: f = new FigureZ(); break;
         }
-        if(i<0)return f;
-        counts[lastLastOne - 1]--;
-        counts[lastOne -1]--;
-        
         lastLastOne = lastOne;
         lastOne = i+1;
         counts[i]++;
-        
-        
          
         i = r.nextInt(4);
 
