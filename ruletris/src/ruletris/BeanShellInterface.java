@@ -13,6 +13,8 @@ import java.util.logging.Logger;
  */
 public class BeanShellInterface {
     
+    private static int delay = 500;  //Delay between subsequent drops in microseconds.
+    
     /*
      * Initializes the game and for each subsequent piece executes supplied
      * script until the game is over.
@@ -54,14 +56,38 @@ public class BeanShellInterface {
     }
     
     /*
+     * The class is provided to enable testing algorithms.
+     * It provides the same functionality as run(), only instead of reading a 
+     * script it calls method algorithm().
+     */
+    public static void runJava () {
+        World world = new World();
+        
+        while(true) {
+            algorithm(world);
+            world.dropPiece();
+            world.nextPieceOnGrid();
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    /*
+     * The algorithm to be executed. Should be written just as the bsh script.
+     */
+    private static void algorithm (World world) {
+        
+    }
+    
+    /*
      * Starts the program with the script specified as the fist argument.
      */
     public static void main (String args[]) {
-        if(args.length < 1) {
-            System.err.println("missing script filename");
-            return;
-        }
-        run(args[0]);
+        
+        runJava();
     }
     
 }
