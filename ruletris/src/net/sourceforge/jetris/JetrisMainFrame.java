@@ -267,26 +267,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
             } 
     		else 
     		{
-                  if(isNewFigureDroped)
-                  {
-                	  isNewFigureDroped = false;
-                      count = 0;
-                      nextMove();
-                      continue;
-                  }
-                  else
-                  {
-                	 paintTG();
-                	 paintNewPosition();
-                            //TODO: draw piece
-                  }
-                  count += 50;
-                  if(count + 50*tg.getLevel() >= 1100)
-                  {
-                            count = 0;
-                            nextY++;
-                            nextMove();
-                  }
+    			 paintTG();
+    			 //paintNewPosition();
+    			 nextMove();
+                 
             }
         }
     }
@@ -482,7 +466,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         this.setResizable(true);
         
         fNext = ff.getFigure(-1);
-        
+        isNewFigureDroped = true;
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
@@ -1046,7 +1030,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     }
     //returns true if the piece falls to the ground
     public boolean nextMove() {
-    	boolean res = false; 
+    	boolean res = false;
+    	if(f.toArray()[0][0]==-1)return true; 
         f.setOffset(nextX, nextY);
         if(singleLine)
         	if(tg.addFigureSingleLine(f)) {
@@ -1135,7 +1120,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     private void dropNext() {
         if(isGameOver)
         {  	
-        	JOptionPane.showMessageDialog(this, "GAME OVER!");
+        	//JOptionPane.showMessageDialog(this, "GAME OVER!");
         	parent.gameOver();
         	return;
         }
@@ -1150,13 +1135,13 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         fNext = ff.getRandomFigure();
         
         
-
-        if (tg.isGameOver(f))
+        isGameOver = tg.isGameOver(f);
+        if (isGameOver)
         {
         	isGameOver = tg.isGameOverOver(f);
-        	if(!isGameOver) singleLine = true; 
+        	if(!isGameOver) singleLine = true;
         }
-        showNext(fNext);
+        if(!isGameOver)showNext(fNext);
 
         isNewFigureDroped = true;
         updateStats();
@@ -1205,7 +1190,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 
         
         tg.addFigure(f);
-        paintTG();
+        //paintTG();
          
     }
     
@@ -1387,7 +1372,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
             try {
                 JMenuItem tmp = (JMenuItem) e.getSource();
                 if (tmp == jetrisRestart) {
-                    restart();
+                    //restart();
                 } else if (tmp == jetrisPause) {
                     pause();
                 } else if (tmp == jetrisHiScore) {
@@ -1409,4 +1394,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		// TODO Auto-generated method stub
 		
 	}
+    public void setFlag()
+    {
+    	isNewFigureDroped = true;
+    }
 }

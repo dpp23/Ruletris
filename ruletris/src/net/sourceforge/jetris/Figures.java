@@ -375,7 +375,14 @@ class FigureNone extends Figure {
         super(new int[] {4,4,4,4}, 
               new int[] {4,4,4,4});
     }
-    
+    public int[][] toArray()
+    {
+    	int [][]temp = new int[4][4];
+    	for(int i=0;i<4;i++)
+    		for(int j=0;j<4;j++)
+    			temp[i][j]= -1;
+    	return temp;
+    }
     public void rotationRight() {}
 
     protected void rotationLeft() {}

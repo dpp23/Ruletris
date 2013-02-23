@@ -5,6 +5,9 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 
 import net.sourceforge.jetris.*;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import net.sourceforge.jetris.*;
 
 public class World
 {
@@ -17,7 +20,7 @@ public class World
 		isPieceDropped = false;
 		isGameOver = false;
 		nextPieceOnGrid();
-		isPieceDropped = false;
+		mf.setFlag();
 	}
 	
 	//the following two methods return respectfully the X and Y offset of the current piece
