@@ -61,7 +61,12 @@ public class TetrisGrid implements Serializable{
     			 if (gLines.get(i)[j]>0) temp[i][j] = 1;    		
 		return temp;    	
     }
-    
+    public boolean addFigureSingleLine(Figure f)
+    {
+    	addFiguretoGridSinleLine(f);
+    	eliminateLines();
+		return true;
+	}
     boolean addFigure(Figure f) {
         for (int j = 0; j < f.arrX.length; j++) {
             if(f.arrY[j]+f.offsetY >= 20) {
@@ -79,6 +84,22 @@ public class TetrisGrid implements Serializable{
         }
         return false;
     }
+    boolean isSingleLineTopMoveValid(Figure f, int xOffset)
+    {
+    	int temp [][] = f.toArray();
+    	boolean b = true;
+        try {
+            for (int j = 0; j < 4; j++) {
+                if(gLines.get(0)[j + xOffset] != 0 && temp[0][j] != 0) {
+                    b = false;
+                } 
+            }
+            return b;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     
     boolean isNextMoveValid(Figure f, int xOffset, int yOffset) {
         boolean b = true;
@@ -94,6 +115,12 @@ public class TetrisGrid implements Serializable{
         }
     }
     
+    private void addFiguretoGridSinleLine(Figure f)
+    {
+    	int temp[][] = f.toArray();
+    	for(int i = 0; i < 4; i++)
+    			gLines.get(0)[i+4] = temp[3][i];
+    }
     private void addFiguretoGrid(Figure f) {
         for (int j = 0; j < f.arrX.length; j++) {
             gLines.get(f.arrY[j]+f.offsetY)[f.arrX[j]+f.offsetX] = f.getGridVal();
@@ -139,6 +166,11 @@ public class TetrisGrid implements Serializable{
     boolean isGameOver(Figure f) {
         
         return !isNextMoveValid(f, 4, 0);
+    }
+    
+    boolean isGameOverOver(Figure f)
+    {
+    	return !isSingleLineTopMoveValid(f,4);
     }
     
     int getLevel() { return level;}
@@ -207,4 +239,6 @@ public class TetrisGrid implements Serializable{
         }
         return sb.toString();
     }
+
+	
 }

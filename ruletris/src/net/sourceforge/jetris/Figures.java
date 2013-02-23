@@ -6,6 +6,7 @@ import java.awt.Color;
     protected FigureI() {
         super(new int[] {0,0,0,0}, 
               new int[] {0,1,2,3});
+        
     }
 
     public void rotationRight() {
@@ -39,7 +40,8 @@ class FigureT extends Figure {
     protected FigureT() {
         super(new int[] {0,1,1,2}, 
               new int[] {0,0,1,0});
-
+       
+        
         rotations = new int[8][4];
         rotations[0] = new int[] {0,1,1,2};
         rotations[1] = new int[] {0,0,1,0};
@@ -136,6 +138,8 @@ class FigureL extends Figure {
         super(new int[] {0,0,0,1}, 
               new int[] {0,1,2,2});
         
+
+        
         rotations = new int[8][4];
         rotations[0] = new int[] {0,0,0,1};
         rotations[1] = new int[] {0,1,2,2};
@@ -211,6 +215,7 @@ class FigureJ extends Figure {
         super(new int[] {0,1,1,1}, 
               new int[] {2,0,1,2});
         
+        
         rotations = new int[8][4];
         rotations[0] = new int[] {0,1,1,1};
         rotations[1] = new int[] {2,0,1,2};
@@ -284,6 +289,7 @@ class FigureS extends Figure {
     protected FigureS() {
         super(new int[] {0,1,1,2}, 
               new int[] {1,0,1,0});
+       
         
         rotations = new int[4][4];
         rotations[0] = new int[] {0,1,1,2};
@@ -329,6 +335,7 @@ class FigureZ extends Figure {
         super(new int[] {0,1,1,2}, 
               new int[] {0,0,1,1});
         
+        
         rotations = new int[4][4];
         rotations[0] = new int[] {0,1,1,2};
         rotations[1] = new int[] {0,0,1,1};
@@ -362,3 +369,24 @@ class FigureZ extends Figure {
         return COL_Z;
     }
 }
+class FigureNone extends Figure {
+
+    protected FigureNone() {
+        super(new int[] {4,4,4,4}, 
+              new int[] {4,4,4,4});
+    }
+    
+    public void rotationRight() {}
+
+    protected void rotationLeft() {}
+    
+    
+    protected int getGridVal() {
+        return NONE;
+    }
+    
+    protected Color getGolor() {
+        return COL_NONE;
+    }
+}
+

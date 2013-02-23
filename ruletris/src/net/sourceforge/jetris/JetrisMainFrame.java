@@ -21,157 +21,162 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.BufferedInputStream;
 
-public class JetrisMainFrame extends JFrame implements ActionListener {
+public class JetrisMainFrame extends JFrame implements ActionListener  {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private static final String NAME = "RULETRIS 0.1";
-    private static final int CELL_H = 24;
-    
-    private Font font;
-    private JPanel playPanel;
-    private JLabel score;
-    private JLabel lines;
-    private JLabel time;
-    private JLabel[] statsF;
-    private JLabel[] statsL;
-    private JLabel levelLabel;
-    private JLabel hiScoreLabel;
-    private JPanel[][] cells;
-    private TetrisGrid tg;
-    private JPanel[][] next;
-    private int nextX;
-    private int nextY;
-    private Figure f;
-    private Figure fNext;
-    public FigureFactory ff;
-    private boolean isNewFigureDroped;
-    private boolean isGameOver;
-    private boolean isPause;
-    private Color nextBg;
-    private TimeThread tt;
-    private KeyListener keyHandler;
-    
-   
-    private JPanel about;
-    
-    //MENU
-    private JMenuItem jetrisRestart;
-    private JMenuItem jetrisPause;
-    private JMenuItem jetrisHiScore;
-    private JMenuItem jetrisExit;
-    
-    private JMenuItem helpAbout;
-    private JMenuItem helpJetris;
-    
-    private HelpDialog helpDialog;
-    
-    private JPanel hiScorePanel;
-    private PublishHandler pH;
-    private int count =0;
-    
-    
-    /*
-     *  ------------- Added by oeb21 -------------
-     */
-    
-    private GameGenerator parent;
-    
-	private String currentFile = "Untitled";
-	private boolean changed = false;
+	 /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private static final String NAME = "RULETRIS 0.1";
+	    private static final int CELL_H = 24;
+	    
+	    private Font font;
+	    private JPanel playPanel;
+	    private JLabel score;
+	    private JLabel lines;
+	    private JLabel time;
+	    private JLabel[] statsF;
+	    private JLabel[] statsL;
+	    private JLabel levelLabel;
+	    private JLabel hiScoreLabel;
+	    private JPanel[][] cells;
+	    private TetrisGrid tg;
+	    private JPanel[][] next;
+	    private int nextX;
+	    private int nextY;
+	    private Figure f;
+	    private Figure fNext;
+	    public FigureFactory ff;
+	    private boolean isNewFigureDroped;
+	    private boolean isGameOver;
+	    private boolean isPause;
+	    private boolean singleLine;
+	    private Color nextBg;
+	    private TimeThread tt;
+	    private KeyListener keyHandler;
+	    
+	   
+	    private JPanel about;
+	    
+	    //MENU
+	    private JMenuItem jetrisRestart;
+	    private JMenuItem jetrisPause;
+	    private JMenuItem jetrisHiScore;
+	    private JMenuItem jetrisExit;
+	    
+	    private JMenuItem helpAbout;
+	    private JMenuItem helpJetris;
+	    
+	    private HelpDialog helpDialog;
+	    
+	    private JPanel hiScorePanel;
+	    private PublishHandler pH;
+	    private int count =0;
+	    
+	    
+	    /*
+	     *  ------------- Added by oeb21 -------------
+	     */
+	    
+	    private GameGenerator parent;
+	    
+		private String currentFile = "Untitled";
+		private boolean changed = false;
 
-	
-	private JEditorPane editArea = new JEditorPane();
-	private JTextArea helpArea = new JTextArea(15,100);
-	
-	
-    JButton prevHelpButton = new JButton("Prev");
-    JButton nextHelpButton = new JButton("Next");
-    JButton nextLevelButton = new JButton("Next Level");
-	
-	private JFileChooser dialog = new JFileChooser(System.getProperty("user.dir"));
-	private String currentDoc = "default";
-	private boolean fileChanged = false;
 		
-	
-	/*
-	 * -----------end of added by Ollie----------------
-	 */
-	
-	
-	Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
-		public void actionPerformed(ActionEvent e) 
-		{
-				newFile();
-		}
-	};
-	
-	Action Open = new AbstractAction("Open", new ImageIcon("open.gif")) {
-		public void actionPerformed(ActionEvent e) {
-			saveOld();
-			if(dialog.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
-				readInFile(dialog.getSelectedFile().getAbsolutePath());
+		private JEditorPane editArea = new JEditorPane();
+		private JTextArea helpArea = new JTextArea(15,100);
+		
+		
+	    JButton prevHelpButton = new JButton("Prev");
+	    JButton nextHelpButton = new JButton("Next");
+	    JButton nextLevelButton = new JButton("Next Level");
+		
+		private JFileChooser dialog = new JFileChooser(System.getProperty("user.dir"));
+		private String currentDoc = "default";
+		private boolean fileChanged = false;
+			
+		
+		/*
+		 * -----------end of added by Ollie----------------
+		 */
+		
+		
+		Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
+			public void actionPerformed(ActionEvent e) 
+			{
+					newFile();
 			}
-			SaveAs.setEnabled(true);
-		}
-	};
-	
-	
-	Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
-		public void actionPerformed(ActionEvent e) {
-			if(!currentFile.equals("Untitled"))
-				saveFile(currentFile);
-			else
-				saveFileAs();
-		}
-	};
-	
+		};
+		
+		Action Open = new AbstractAction("Open", new ImageIcon("open.gif")) {
+			public void actionPerformed(ActionEvent e) {
+				saveOld();
+				if(dialog.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
+					readInFile(dialog.getSelectedFile().getAbsolutePath());
+				}
+				SaveAs.setEnabled(true);
+			}
+		};
+		
+		
+		Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
+			public void actionPerformed(ActionEvent e) {
+				if(!currentFile.equals("Untitled"))
+					saveFile(currentFile);
+				else
+					saveFileAs();
+			}
+		};
+		
 
-	
-	Action SaveAs = new AbstractAction("Save as...") {
-		public void actionPerformed(ActionEvent e) {
-			saveFileAs();
-		}
-	};
-	
-	Action Compile = new AbstractAction("Compile") {
-		public void actionPerformed(ActionEvent e) {
-			compileCode();
-		}
-	};
-	
-	
-	Action nextHelp = new AbstractAction() {
-		public void actionPerformed(ActionEvent e) {
-			getNextHelp();
-		}
-	};
-	
-	Action prevHelp = new AbstractAction() {
-		public void actionPerformed(ActionEvent e) {
-			getPrevHelp();
-		}
-	};
-	Action nextLevel = new AbstractAction("Next Level") {
-		public void actionPerformed(ActionEvent e) {
-			getNextLevel();
-		}
-	};
-	
-	
-	ActionMap m = editArea.getActionMap();
-	Action Cut = m.get(DefaultEditorKit.cutAction);
-	Action Copy = m.get(DefaultEditorKit.copyAction);
-	Action Paste = m.get(DefaultEditorKit.pasteAction);
-	
-	
-	/*
-	 * -------------------------------------------
-	 */
+		
+		Action SaveAs = new AbstractAction("Save as...") {
+			public void actionPerformed(ActionEvent e) {
+				saveFileAs();
+			}
+		};
+		
+		Action Compile = new AbstractAction("Compile") {
+			public void actionPerformed(ActionEvent e) {
+				compileCode();
+			}
+		};
+		
+		
+		Action nextHelp = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				getNextHelp();
+			}
+		};
+		
+		Action prevHelp = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				getPrevHelp();
+			}
+		};
+		Action nextLevel = new AbstractAction("Next Level") {
+			public void actionPerformed(ActionEvent e) {
+				getNextLevel();
+			}
+		};
+		
+		
+		ActionMap m = editArea.getActionMap();
+		Action Cut = m.get(DefaultEditorKit.cutAction);
+		Action Copy = m.get(DefaultEditorKit.copyAction);
+		Action Paste = m.get(DefaultEditorKit.pasteAction);
+		
+		
+		/*
+		 * -------------------------------------------
+		 */
+	   
+    
    
     
     private class TimeThread extends Thread {
@@ -326,13 +331,13 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
         
         initMenu();
 
-    	// GAME PANEL 
+     // GAME PANEL 
         JPanel all = new JPanel(new BorderLayout());
         all.add(getStatPanel(), BorderLayout.WEST);
         all.add(getPlayPanel(), BorderLayout.CENTER);
         all.add(getMenuPanel(), BorderLayout.EAST);
         all.add(getCopyrightPanel(), BorderLayout.SOUTH);
-     
+
 
 /*
  * ------------------------------ TEXT PANEL -------------------------------
@@ -457,6 +462,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
         helpArea.setFont(new Font("Monospaced",Font.ROMAN_BASELINE,15));
 		JScrollPane helpscroll = new JScrollPane(helpArea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+       
+
         HelpPanel.add(helpscroll, "span");   // Span without "count" means span whole row.
 		HelpPanel.add(helpButtonPanel)  ;    // Wrap to next row
 		
@@ -474,15 +481,15 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
         pack();
         this.setResizable(true);
         
-        fNext = ff.getFigure(0);
-
+        fNext = ff.getFigure(-1);
+        
+        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
         setVisible(true);
         sp.setVisible(false);
         sp.dispose();
     }
-    
     private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
 			changed = true;
@@ -638,8 +645,6 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
 			prevHelpButton.setEnabled(false);
 		}
 	}
-	
-	
     public Figure getFigure()
     {
     	return fNext;
@@ -1043,17 +1048,20 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
     public boolean nextMove() {
     	boolean res = false; 
         f.setOffset(nextX, nextY);
-        
-        if(tg.addFigure(f)) {
-            //dropNext();
-        	return true;
-           // f.setOffset(nextX, nextY);
-            //paintTG();
-        } else {
-            clearOldPosition();
-        }
+        if(singleLine)
+        	if(tg.addFigureSingleLine(f)) {
+            	return true;
+            } else {
+                clearOldPosition();
+            }
+        else
+	        if(tg.addFigure(f)) {
+	        	return true;
+	        } else {
+	            clearOldPosition();
+	        }
         paintNewPosition();
-        
+        singleLine = false;
         return res;
     }
     
@@ -1096,7 +1104,19 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
             i++;
         }
     }
-    
+    private void dropSingleLine(Figure f) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                next[i][j].setBackground(nextBg);
+                next[i][j].setBorder(BorderFactory.createEmptyBorder());
+            }
+        }
+        
+        for (int j = 0; j < f.arrX.length; j++) {
+            next[f.arrY[j]][f.arrX[j]].setBackground(f.getGolor());
+            next[f.arrY[j]][f.arrX[j]].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        }
+    }
     private void showNext(Figure f) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -1111,6 +1131,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
         }
     }
     
+
     private void dropNext() {
         if(isGameOver)
         {  	
@@ -1127,10 +1148,15 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
 
         f = fNext;
         fNext = ff.getRandomFigure();
-        showNext(fNext);
-
-        isGameOver = tg.isGameOver(f);
         
+        
+
+        if (tg.isGameOver(f))
+        {
+        	isGameOver = tg.isGameOverOver(f);
+        	if(!isGameOver) singleLine = true; 
+        }
+        showNext(fNext);
 
         isNewFigureDroped = true;
         updateStats();
@@ -1378,7 +1404,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener {
             }
         }
     }
-	@Override
+    @Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
