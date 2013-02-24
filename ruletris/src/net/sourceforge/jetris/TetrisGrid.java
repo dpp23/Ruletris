@@ -87,14 +87,14 @@ public class TetrisGrid implements Serializable{
     boolean isSingleLineTopMoveValid(Figure f, int xOffset)
     {
     	int temp [][] = f.toArray();
-    	boolean b = true;
         try {
             for (int j = 0; j < 4; j++) {
                 if(gLines.get(0)[j + xOffset] != 0 && temp[0][j] != 0) {
-                    b = false;
+                    return false;
                 } 
             }
-            return b;
+            System.out.println("LINE true");
+            return true;
         } catch (Exception e) {
             return false;
         }

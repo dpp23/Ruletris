@@ -1136,11 +1136,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         
         
         isGameOver = tg.isGameOver(f);
-        if (isGameOver)
+        /*if (isGameOver)
         {
         	isGameOver = tg.isGameOverOver(f);
         	if(!isGameOver) singleLine = true;
-        }
+        }*/
         if(!isGameOver)showNext(fNext);
 
         isNewFigureDroped = true;
