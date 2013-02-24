@@ -17,8 +17,8 @@ public class BeanShellInterface {
      * Initializes the game and for each subsequent piece executes supplied
      * script until the game is over.
      */
-    public static void run(String scriptFileName) {
-        World world = new World();
+    public static void run(String scriptFileName, World world) {
+//        World world = new World();
         Interpreter inter = new Interpreter();    //BeanShell interpreter.
         
         /*
@@ -61,7 +61,7 @@ public class BeanShellInterface {
             System.err.println("missing script filename");
             return;
         }
-        run(args[0]);
+       // run(args[0]);
     }
     
 }
