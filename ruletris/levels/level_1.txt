@@ -2,3 +2,4 @@ This is the text for the first test for level 1  %   This is the text hint
 This is the second set of text 
 This is the third hint.    % this is hard.
 and this is the fourth.... 
+[heightUnder=3]
