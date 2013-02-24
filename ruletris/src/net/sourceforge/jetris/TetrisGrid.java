@@ -93,7 +93,6 @@ public class TetrisGrid implements Serializable{
                     return false;
                 } 
             }
-            System.out.println("LINE true");
             return true;
         } catch (Exception e) {
             return false;

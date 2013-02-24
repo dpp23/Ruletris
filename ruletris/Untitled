@@ -1,3 +1,2 @@
-
-System.out.println(world.dropPiece());
+world.dropPiece();
 Thread.sleep(1000);
