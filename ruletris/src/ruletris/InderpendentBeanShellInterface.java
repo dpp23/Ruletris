@@ -19,6 +19,12 @@ public class InderpendentBeanShellInterface {
 	     * script until the game is over.
 	     */
 		private static boolean isOver = false;
+
+            private static GameGenerator parentGameGenerator = null; // parentGameGenerator is notified whenever a level is complete. Ignored if null.
+
+            public static void setParent (GameGenerator parent) {
+                parentGameGenerator = parent;
+            }
 	
 	    public static void run(String scriptFileName, World currentWorld) {
 	        World world = currentWorld;
@@ -53,6 +59,22 @@ public class InderpendentBeanShellInterface {
 	            }
 	            
 	            world.nextPieceOnGrid();
+
+                    // Check if objectives met (i.e., if level complete)
+                    if (parentGameGenerator != null) {
+                        Levels level = parentGameGenerator.getCurrentLevels();
+                        if (level != null) {
+                                Objectives o = level.getObjectives();
+                                if (   (o.numHoles==-1 || o.numHoles == WorldUtils.numHoles(world))
+                                    && (o.height==-1 || o.height == WorldUtils.height(world))
+                                    && (o.heightUnder==-1 || WorldUtils.height(world) < o.heightUnder) )
+                                {
+                                        parentGameGenerator.objectivesMet();
+                                        break;
+                                }
+                        }
+                    }
+
 	        }
 	        isOver = false;
 	    }

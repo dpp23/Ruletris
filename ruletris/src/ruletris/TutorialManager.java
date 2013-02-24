@@ -46,6 +46,12 @@ public class TutorialManager
 	{
 		return null;	
 	}
+
+        // Needed by InderpendentBeanShellInterface
+        public Levels getCurrentLevels ()
+        {
+                return level;
+        }
 	
 	public boolean loadNextLevel()
 	{
@@ -68,4 +74,6 @@ public class TutorialManager
 		}
 		else { return false;} 
 	}
+
+
 }

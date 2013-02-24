@@ -27,6 +27,8 @@ public class GameGenerator {
     	mf = new JetrisMainFrame(this);
     	world = new World(mf);
     	bsi = new InderpendentBeanShellInterface();
+
+        InderpendentBeanShellInterface.setParent(this);
 	}
 
 /*-------------------------------------------------------------------------
@@ -47,6 +49,28 @@ public class GameGenerator {
 		{
 			  public void run() 
 			  {
+        	int t [][] = 
+         	   { {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},	
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,0,0,0,0,0,0,0},
+         		 {0,0,0,1,1,1,0,0,0,0},
+         		 {0,0,0,1,0,0,0,0,0,0},
+         		 {0,0,0,1,0,0,0,0,0,0}};
+         	System.out.println("THIS: " + world.setGrid(t));
 				  InderpendentBeanShellInterface.run(file, world);
 			  }
 		};
@@ -93,6 +117,12 @@ public class GameGenerator {
 	{
 		bsi.isOver(); 
 	}
+
+        // Needed by InderpendentBeanShellInterface for objectives stuff (see run())
+        public Levels getCurrentLevels()
+        {
+                return tut.getCurrentLevels();
+        }
 	
 	/*
 	 * Get the new board to start the test. This will be stored in a file somewhere. 
@@ -102,6 +132,11 @@ public class GameGenerator {
 		return null;
 	}
 
+        // This is called by InderpendentBeanShellInterface whenever the user has completed the current level, e.g. has filled in all gaps.
+        public void objectivesMet ()
+        {
+                System.out.println("Level complete!");
+        }
 	
 	/*--------------------------------------------------
 	 *            To do with running world
