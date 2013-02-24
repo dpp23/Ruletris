@@ -52,6 +52,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    private Figure fNext;
 	    public FigureFactory ff;
 	    private boolean isNewFigureDroped;
+	    private boolean noPaint;
 	    private boolean isGameOver;
 	    private boolean isPause;
 	    private boolean singleLine;
@@ -269,15 +270,15 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     		{
     			 paintTG();
     			 //paintNewPosition();
-    			 nextMove();
-                 
+    			 if(noPaint) nextMove();
+                 noPaint = false;
             }
         }
     }
     public JetrisMainFrame(GameGenerator gameGenerator) {
         super(NAME);
         
-        
+        noPaint = false;
         parent = gameGenerator; 
         SplashScreen sp = new SplashScreen();
         
@@ -1035,6 +1036,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         f.setOffset(nextX, nextY);
         if(singleLine)
         	if(tg.addFigureSingleLine(f)) {
+        		noPaint = true;
             	return true;
             } else {
                 clearOldPosition();
@@ -1136,11 +1138,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         
         
         isGameOver = tg.isGameOver(f);
-        /*if (isGameOver)
+        if (isGameOver)
         {
         	isGameOver = tg.isGameOverOver(f);
         	if(!isGameOver) singleLine = true;
-        }*/
+        }
         if(!isGameOver)showNext(fNext);
 
         isNewFigureDroped = true;
