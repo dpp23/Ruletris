@@ -11,9 +11,7 @@ import java.io.InputStreamReader;
  * file in the main directory. 
  * 
  * In a level file each line represents one "hint". If you want to inject code into their text editor then seperate 
- * the hint and the code to inject wi					if (line.charAt(0) = '[') {
-                                        }
-th a "%" charecter. be sure not to NOT start a new line though.
+ * the hint and the code to inject with a "%" charecter. be sure not to NOT start a new line though.
  * 
  * Starting a line with "[" (and ending it with "]") allows you to specify objectives in the form
  * [objective=value]
