@@ -28,6 +28,7 @@ public class InderpendentBeanShellInterface {
 	
 	    public static void run(String scriptFileName, World currentWorld) {
 	        World world = currentWorld;
+                WorldUI worldUI = world;
 	        Interpreter inter = new Interpreter();    //BeanShell interpreter.
 	        
 	        /*
@@ -35,7 +36,7 @@ public class InderpendentBeanShellInterface {
 	         * to show up here.
 	         */
 	        try {
-	            inter.set("world", world);
+	            inter.set("world", worldUI);
 	        } catch (EvalError ex) {
 	            Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
 	        }
@@ -43,9 +44,6 @@ public class InderpendentBeanShellInterface {
 	        /*
 	         * Execute the script and get the next piece.
 	         * The script is assumed to be written correctly.
-	         * TODO: Prevent the user from getting next piece manually by hiding
-	         * method world.nextPieceOnGrid() from him.
-	         * TODO: Gracefully handle the end of the game.
 	         */
 	        while(!isOver) {
 	            try {
@@ -55,7 +53,8 @@ public class InderpendentBeanShellInterface {
 	            } catch (IOException ex) {
 	                Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
 	            } catch (EvalError ex) {
-	                Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
+                        //TODO: Direct this message to a place visible by user.
+	                System.out.println(ex.getMessage());
 	            }
 	            
 	            world.nextPieceOnGrid();
