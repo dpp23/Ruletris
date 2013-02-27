@@ -1,7 +1,7 @@
 package ruletris;
 
 import net.sourceforge.jetris.JetrisMainFrame;
-import ruletris.InderpendentBeanShellInterface; 
+import ruletris.IndependentBeanShellInterface; 
 
 /*
  * All hte important bits are now done through the game generator. 
@@ -16,7 +16,7 @@ import ruletris.InderpendentBeanShellInterface;
 public class GameGenerator {
 
 	private static World world;
-	private static InderpendentBeanShellInterface bsi;
+	private static IndependentBeanShellInterface bsi;
 	private static TutorialManager tut; 
 	private static JetrisMainFrame mf;
 	
@@ -26,9 +26,9 @@ public class GameGenerator {
     	tut = new TutorialManager(1,4);
     	mf = new JetrisMainFrame(this);
     	world = new World(mf);
-    	bsi = new InderpendentBeanShellInterface();
+    	bsi = new IndependentBeanShellInterface();
 
-        InderpendentBeanShellInterface.setParent(this);
+        IndependentBeanShellInterface.setParent(this);
 	}
 
 /*-------------------------------------------------------------------------
@@ -49,7 +49,7 @@ public class GameGenerator {
 		{
 			  public void run() 
 			  {
-				  InderpendentBeanShellInterface.run(file, world);
+				  IndependentBeanShellInterface.run(file, world);
 			  }
 		};
 		
@@ -96,7 +96,7 @@ public class GameGenerator {
 		bsi.isOver(); 
 	}
 
-        // Needed by InderpendentBeanShellInterface for objectives stuff (see run())
+        // Needed by IndependentBeanShellInterface for objectives stuff (see run())
         public Levels getCurrentLevels()
         {
                 return tut.getCurrentLevels();
@@ -110,7 +110,7 @@ public class GameGenerator {
 		return null;
 	}
 
-        // This is called by InderpendentBeanShellInterface whenever the user has completed the current level, e.g. has filled in all gaps.
+        // This is called by IndependentBeanShellInterface whenever the user has completed the current level, e.g. has filled in all gaps.
         public void objectivesMet ()
         {
                 System.out.println("Level complete!");
