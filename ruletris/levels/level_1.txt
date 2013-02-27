@@ -1,5 +1,4 @@
-This is the text for the first test for level 1  %   This is the text hint 
-This is the second set of text 
-This is the third hint.    % this is hard.
-and this is the fourth.... 
-[heightUnder=3]
+I have been using http://www.onlinehtmleditor.net/ to make the tutorial files for the sake of consistency.... 
+<h2>Level 1</h2> <p> The goal of level 1 is to create a robot that will move square blocks down the board </p> <p> This tutorial will lead you through all the steps necessary to achieve this with not prior programming knowledge! </p>
+<h2>Variables</h2> <p> A variable is a value that can be change. A variable can either be: <ul> <li>integer : any whole number</li><li>boolean : True or False</li><li>String : a series of characters between " "</li></ul></p> % @ @ int number = 4 @ @ String some_text = "This is some text" @ @ boolean yes_or_no = true
+

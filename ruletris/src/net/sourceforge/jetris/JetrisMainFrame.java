@@ -7,6 +7,7 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.io.*;
 import javax.swing.text.*;
+import javax.swing.JDialog.*;
 
 import ruletris.GameGenerator;
 import ruletris.LevelStep;
@@ -21,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.BufferedInputStream;
@@ -83,14 +85,94 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	     *  ------------- Added by oeb21 -------------
 	     */
 	    
+	    
+	    class OutputBox extends JDialog {
+	    	
+	    	private boolean isHidden;
+	    	private JTextArea text = 
+	    		new JTextArea("");
+	    	private JScrollPane scroll;
+	    	private JPanel panel = new JPanel(new BorderLayout())  
+	    	{
+	    		public Insets getInsets() {
+	    			return new Insets(5, 10, 5, 5);
+	    		}
+	    	};
+	    	
+	    	
+	    	public OutputBox() {
+	    		super((Frame)null, "Ruletris Output");
+	    		
+	    		Dimension size = new Dimension(700, 200); 
+	    		text.setPreferredSize(size); //(15,100)
+	    		text.setMaximumSize(size);
+	    		text.setMinimumSize(size);
+	    		
+	    		text.setEditable(false);
+	  
+	    		
+	    		
+	    		
+	    		scroll =  new JScrollPane(text);
+	    		panel.add(scroll);
+	    		getContentPane().add(panel, BorderLayout.CENTER);
+
+	    		addWindowListener(new WindowAdapter() {
+	    			public void windowClosing(WindowEvent e) {
+	    				setVisible(false);
+	    				isHidden = true;
+	    			}
+	    		});
+	    		
+	    		pack();
+	    		setVisible(false);
+	    		isHidden = true;
+	    	}
+	    	
+	    	public void Show()
+	    	{
+	    		setVisible(true);
+	    		isHidden = false;
+	    	}
+	    	
+	    	public void Hide()
+	    	{
+	    		setVisible(false);
+	    		isHidden = true;
+	    	}
+	    	
+	    	public boolean isShown()
+	    	{
+	    		return !isHidden;
+	    	}
+	    	
+	    	public void setText(String newOutput)
+	    	{
+	    		text.setText(text.getText()+newOutput);
+	    	}
+	    	
+	    	public void clearText()
+	    	{
+	    		text.setText("");
+	    	}
+	    }
+	    
 	    private GameGenerator parent;
 	    
-		private String currentFile = "Untitled";
+		/* This is the game panel for the tetris */
+	    JPanel all = new JPanel(new BorderLayout());
+	    JPanel panel = new JPanel(new MigLayout("fillx,insets 3"));
+
+	    
+	    private OutputBox outputWindow = new OutputBox();
+	    
+	    
+	    private String currentFile = "Untitled";
 		private boolean changed = false;
 
 		
 		private JEditorPane editArea = new JEditorPane();
-		private JTextArea helpArea = new JTextArea(15,100);
+		private JEditorPane helpArea = new JEditorPane();
 		
 		
 	    JButton prevHelpButton = new JButton("Prev");
@@ -101,10 +183,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		private String currentDoc = "default";
 		private boolean fileChanged = false;
 			
-		
 		/*
 		 * -----------end of added by Ollie----------------
 		 */
+		
 		
 		
 		Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
@@ -145,6 +227,12 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		Action Compile = new AbstractAction("Compile") {
 			public void actionPerformed(ActionEvent e) {
 				compileCode();
+			}
+		};
+		
+		Action Hide = new AbstractAction("Toggle Output") {
+			public void actionPerformed(ActionEvent e) {
+				hideTetris();
 			}
 		};
 		
@@ -318,11 +406,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         initMenu();
 
      // GAME PANEL 
-        JPanel all = new JPanel(new BorderLayout());
         all.add(getStatPanel(), BorderLayout.WEST);
         all.add(getPlayPanel(), BorderLayout.CENTER);
         all.add(getMenuPanel(), BorderLayout.EAST);
         all.add(getCopyrightPanel(), BorderLayout.SOUTH);
+        
 
 
 /*
@@ -375,21 +463,19 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		// ....................ALL BUTTONS FROM HERE ON........................
         
         JButton bugButton = new JButton("Check For Errors");
-        bugButton.setMnemonic('O');
-    
-        //Cancel button
-        JButton compileButton = new JButton("Compile");
-        compileButton.setMnemonic('C');
-        compileButton.setAction(Compile);
         
         //Cancel button
-        JButton hideButton = new JButton("Hide Game");
-        hideButton.setMnemonic('C');
+        JButton compileButton = new JButton("Compile");
+        //Cancel button
+        JButton hideButton = new JButton("Toggle Output");
         
         buttonEditPanel.add(bugButton);   // Wrap to next row
         buttonEditPanel.add(compileButton)  ; // Wrap to next row
         buttonEditPanel.add(hideButton, "wrap");   // Wrap to next row
 		
+        hideButton.setAction(Hide);
+        compileButton.setAction(Compile);
+        
         
         bugButton.setIcon(new ImageIcon("icons/bug.png"));
         compileButton.setIcon(new ImageIcon("icons/compile.png"));
@@ -420,35 +506,18 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		prevHelpButton.setIcon(new ImageIcon("icons/left.png"));
 		nextHelpButton.setIcon(new ImageIcon("icons/right.png"));
         
-		LevelStep first = parent.getCurrentHelp();
-		if (first != null)
-		{
-			helpArea.setText(first.getHelpText());
-			editArea.setText(editArea.getText()+first.getInjectCode());
-			
-			if(first.isLast())
-			{
-				nextHelpButton.setEnabled(false);
-				nextLevelButton.setEnabled(true);
-			}
-			else
-			{
-				nextLevelButton.setEnabled(false);
-			}
-			
-		}
-		else
-		{
-			helpArea.setText("There is no help for this level. You are on your own!");
-			nextLevelButton.setEnabled(true);
-		}
+		helpArea.setEditable(false);   // This greys out the whole thing which does not look very nice. 
+		helpArea.setForeground(Color.black);
+		Dimension size = new Dimension(270, 300); 
+		helpArea.setPreferredSize(size); //(15,100)
+		helpArea.setMaximumSize(size);
+		helpArea.setMinimumSize(size);
 		
-		//helpArea.setEnabled(false);   // This greys out the whole thing which does not look very nice. 
-		helpArea.setLineWrap(true);
         helpArea.setFont(new Font("Monospaced",Font.ROMAN_BASELINE,15));
-		JScrollPane helpscroll = new JScrollPane(helpArea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-       
+		helpArea.setContentType( "text/html" );  
+        helpArea.setForeground(Color.black);
+		
+        JScrollPane helpscroll = new JScrollPane(helpArea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         HelpPanel.add(helpscroll, "span");   // Span without "count" means span whole row.
 		HelpPanel.add(helpButtonPanel)  ;    // Wrap to next row
@@ -470,11 +539,13 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         fNext = ff.getFigure(-1);
         isNewFigureDroped = true;
         
+        getFirstHint();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
         setVisible(true);
         sp.setVisible(false);
         sp.dispose();
+        
     }
     private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
@@ -548,6 +619,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			{
 				saveOld();
 			}
+			outputWindow.clearText();
+			outputWindow.Show();
 			restart();
 			parent.runFullWorld(currentFile);
 	}
@@ -560,8 +633,13 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		{
 			helpArea.setText("");
 			helpArea.setText(newHelp.getHelpText());
-			editArea.setText(editArea.getText()+newHelp.getInjectCode());
 			
+			
+			String[] lines = newHelp.getInjectCode().split("@");
+			for(String s : lines)
+			{
+				editArea.setText(editArea.getText()+s+"\n");
+			}
 
 			if(newHelp.isLast())
 			{
@@ -573,8 +651,31 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 				prevHelpButton.setEnabled(true);
 			}
 		}
-}
+	}
 	
+	public void hideTetris()
+	{
+	
+		if(outputWindow.isShown())
+		{
+			outputWindow.Hide();
+		}
+		else
+		{
+			outputWindow.Show();
+		}
+	}
+	
+	
+	public void setOutput(String newOutput)
+	{
+		outputWindow.setText(newOutput);	
+	}
+	
+	public void clearOutput()
+	{
+		outputWindow.clearText();
+	}
 	
 	private void getPrevHelp() 
 	{		
@@ -597,6 +698,34 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		}
 	}
 	
+	private void getFirstHint()
+	{
+		
+		LevelStep first = parent.getCurrentHelp();
+		if (first != null)
+		{
+			helpArea.setText(first.getHelpText());
+			editArea.setText(editArea.getText()+first.getInjectCode());
+			if(first.isLast())
+			{
+				nextHelpButton.setEnabled(false);
+				nextLevelButton.setEnabled(true);
+			}
+			else
+			{
+				nextLevelButton.setEnabled(false);
+			}
+			
+		}
+		else
+		{
+			helpArea.setText("There is no help for this level. You are on your own!");
+			nextLevelButton.setEnabled(true);
+		}
+		
+	}
+	
+	
 	private void getNextLevel()
 	{
 		if(parent.getNewLevel())
@@ -604,6 +733,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			LevelStep first = parent.getCurrentHelp();
 			if (first != null)
 			{
+				outputWindow.clearText();
+				outputWindow.Hide();
 				helpArea.setText(first.getHelpText());
 				prevHelpButton.setEnabled(false);
 				if(first.isLast())
@@ -835,30 +966,30 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         jp.add(Box.createHorizontalGlue());
         r.add(jp);
         
+       // jp = new JPanel();
+       // jp.setLayout(new BoxLayout(jp, BoxLayout.LINE_AXIS));
+       // jp.add(Box.createRigidArea(ra));
+       // jp.add(new JLabel("TIME:"));
+       // jp.add(Box.createHorizontalGlue());
+       // r.add(jp);
+        
+       // time = new JLabel("00:00:00");
+       // time.setForeground(Color.BLUE);
+        
         jp = new JPanel();
         jp.setLayout(new BoxLayout(jp, BoxLayout.LINE_AXIS));
         jp.add(Box.createRigidArea(ra));
-        jp.add(new JLabel("TIME:"));
-        jp.add(Box.createHorizontalGlue());
-        r.add(jp);
-        
-        time = new JLabel("00:00:00");
-        time.setForeground(Color.BLUE);
-        
-        jp = new JPanel();
-        jp.setLayout(new BoxLayout(jp, BoxLayout.LINE_AXIS));
-        jp.add(Box.createRigidArea(ra));
-        jp.add(time);
+      //  jp.add(time);
         jp.add(Box.createHorizontalGlue());
         r.add(jp);
         
         r.add(Box.createVerticalGlue());
         
-        r.add(addHelpPanel("A or \u2190 - Left"));
-        r.add(addHelpPanel("D or \u2192 - Right"));
-        r.add(addHelpPanel("W or \u2191 - Rotate"));
-        r.add(addHelpPanel("S or \u2193 - Down"));
-        r.add(addHelpPanel("Space - Drop"));
+    //    r.add(addHelpPanel("A or \u2190 - Left"));
+    //    r.add(addHelpPanel("D or \u2192 - Right"));
+    //    r.add(addHelpPanel("W or \u2191 - Rotate"));
+    //    r.add(addHelpPanel("S or \u2193 - Down"));
+    //    r.add(addHelpPanel("Space - Drop"));
         
         //BUTTONS
         r.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -919,6 +1050,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     }
     
     private JPanel getCopyrightPanel() {
+    	/*
         JPanel r = new JPanel(new BorderLayout());
         BoxLayout rL = new BoxLayout(r,BoxLayout.X_AXIS);
         r.setLayout(rL);
@@ -934,6 +1066,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         r.add(email);
         
         return r;
+        */
+    	return new JPanel();
     }
     
     private JPanel getStatPanel() {
@@ -1248,7 +1382,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         isPause = false;
         fNext = ff.getRandomFigure();
         //tt.resetTime();
-        time.setText("00:00:00");
+        //time.setText("00:00:00");
         tg.resetStats();
         dropNext();
         nextMove();
