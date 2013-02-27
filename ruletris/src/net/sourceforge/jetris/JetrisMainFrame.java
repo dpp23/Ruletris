@@ -12,6 +12,7 @@ import javax.swing.JDialog.*;
 import ruletris.GameGenerator;
 import ruletris.LevelStep;
 import ruletris.Start;
+import ruletris.World;
 
 
 import net.miginfocom.swing.MigLayout;
@@ -61,7 +62,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    private Color nextBg;
 	    private TimeThread tt;
 	    private KeyListener keyHandler;
-	    
+	    private World world;
 	   
 	    private JPanel about;
 	    
@@ -1324,7 +1325,6 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         f.offsetXLast = f.offsetX;        
         if(singleLiner)
         {
-        	System.out.println("MOVEDROP " + f.offsetX +" " + f.offsetY);
         	singleLiner = false;
         	if(!tg.isNextMoveValid(f,f.offsetX, f.offsetY))
         	{
@@ -1376,7 +1376,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
                 cells[i][j].setBackground(Color.WHITE);
                 cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             }
-        } 
+        }
+       
         ff.resetCounts();
         isGameOver = false;
         isPause = false;
@@ -1386,6 +1387,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         tg.resetStats();
         dropNext();
         nextMove();
+        world.gameOver(false);
     }
     
     private void updateStats() {
@@ -1546,5 +1548,9 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     public void setFlag()
     {
     	isNewFigureDroped = true;
+    }
+    public void setWorld(World x)
+    {
+    	world = x;
     }
 }

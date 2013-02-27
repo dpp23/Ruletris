@@ -26,11 +26,16 @@ public class GameGenerator {
     	tut = new TutorialManager(1,4);
     	mf = new JetrisMainFrame(this);
     	world = new World(mf);
+    	//world.setVisibility(false);
     	bsi = new IndependentBeanShellInterface();
 
         IndependentBeanShellInterface.setParent(this);
 	}
 
+	public void setGameOver(boolean b)
+	{
+		world.gameOver(true);
+	}
 /*-------------------------------------------------------------------------
  *          These are all callback functions from the GUI. 
  *          They use the Listener class. 

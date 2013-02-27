@@ -14,15 +14,22 @@ public class World implements WorldUI
 	private JetrisMainFrame mf;
 	private boolean isPieceDropped;
 	private boolean isGameOver;
+	private boolean visible;
 	public World(JetrisMainFrame newMf)
 	{
+		visible = true;
 		mf = newMf;
+		mf.setWorld(this);
 		isPieceDropped = false;
 		isGameOver = false;
 		nextPieceOnGrid();
 		mf.setFlag();
 	}
 	
+	public void setVisibility(Boolean b)
+	{
+		visible = b;
+	}
 	//the following two methods return respectfully the X and Y offset of the current piece
 	//if there is not a current piece in motion, return 0;
     @Override
@@ -48,7 +55,7 @@ public class World implements WorldUI
 			if(arr[i].length < 10) return false;
 		mf.getGrid().setGrid(arr);
 		mf.paintTG();
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		return true;
 	}
 	
@@ -94,7 +101,7 @@ public class World implements WorldUI
 	{
 		if(!isPieceDropped || isGameOver)return false;
 		mf.setCurrentFigure(mf.ff.getFigure(i));
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		return true;
 	}
 		
@@ -106,7 +113,7 @@ public class World implements WorldUI
 		for(int i = 0; i < r; i++)
 		{
 			if(!mf.rotationTry())return false;
-			mf.updateGrid(1);
+			if(visible)mf.updateGrid(1);
 		}
 		
 		return true;
@@ -121,7 +128,7 @@ public class World implements WorldUI
 		{
 			mf.moveLeft();
 		}
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		return true;
 	}
 	
@@ -134,7 +141,7 @@ public class World implements WorldUI
 		{	
 			mf.moveRight();
 		}
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		return true;
 	}
 
@@ -152,7 +159,7 @@ public class World implements WorldUI
 			}
 			m--;
 		}
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		return true;
 	}
 	
@@ -161,8 +168,9 @@ public class World implements WorldUI
 	public boolean dropPiece()
 	{
 		if(!isPieceDropped || isGameOver)return false;
+		System.out.println("SHIT");
 		mf.moveDrop();
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		isPieceDropped = false;
 		return true;
 	}
@@ -173,17 +181,21 @@ public class World implements WorldUI
 		if(isGameOver)return false; 
 		if(isPieceDropped) return false; 
 		mf.addFigure();
-		mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		isPieceDropped = true;
 		isGameOver = mf.isGameOver();
 		if(isGameOver)JOptionPane.showMessageDialog(null, "GAME OVER!");
 		return true;
 	}
-
+	
+	//prepares the class for a restarted game
 	public void gameOver(boolean b)
 	{
 		isGameOver = b;
-		
+		if(b)return;
+		isPieceDropped = false;
+		nextPieceOnGrid();
+		mf.setFlag();
 	}
 	
 }
