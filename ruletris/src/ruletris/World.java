@@ -9,7 +9,7 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 import net.sourceforge.jetris.*;
 
-public class World
+public class World implements WorldUI
 {
 	private JetrisMainFrame mf;
 	private boolean isPieceDropped;
@@ -25,11 +25,13 @@ public class World
 	
 	//the following two methods return respectfully the X and Y offset of the current piece
 	//if there is not a current piece in motion, return 0;
+    @Override
 	public int getYoffset()
 	{
 		if(!isPieceDropped || isGameOver)return 0;
 		return mf.getCurrentFigure().getYoffset();
 	}
+    @Override
 	public int getXoffset()
 	{
 		if(!isPieceDropped || isGameOver)return 0;
@@ -58,17 +60,20 @@ public class World
 		mf.setNextFigure(mf.ff.getFigure(i));
 	}
 	
+    @Override
 	public  int[][] getCurrentGrid()
 	{
 		return mf.getGrid().toArray();
 	}
 
+    @Override
 	public  int[][] getCurrentPiece()
 	{
 		if(!isPieceDropped || isGameOver) return new int[4][4];
 		return mf.getCurrentFigure().toArray();
 	}
 	
+    @Override
 	public int[][] getNextPiece()
 	{
 		if(!isPieceDropped || isGameOver) return new int[4][4];
@@ -94,6 +99,7 @@ public class World
 	}
 		
 	//rotates the current piece r times clockwise
+    @Override
 	public boolean rotatePiece(int r)
 	{
 		if(!isPieceDropped || isGameOver)return false;
@@ -107,6 +113,7 @@ public class World
 	}
 
 	//moves the current piece m squares to the left
+    @Override
 	public boolean moveLeft(int m)
 	{
 		if(!isPieceDropped || isGameOver)return false;
@@ -119,6 +126,7 @@ public class World
 	}
 	
 	//Moves the current piece m squares to the right
+    @Override
 	public boolean moveRight(int m)
 	{
 		if(!isPieceDropped || isGameOver)return false;
@@ -131,6 +139,7 @@ public class World
 	}
 
 	//returns false if the piece cannot be moved down or if it falls on the ground
+    @Override
 	public boolean moveDown(int m)
 	{
 		if(!isPieceDropped || isGameOver)return false;
@@ -148,6 +157,7 @@ public class World
 	}
 	
 
+    @Override
 	public boolean dropPiece()
 	{
 		if(!isPieceDropped || isGameOver)return false;
