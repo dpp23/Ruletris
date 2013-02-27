@@ -64,14 +64,14 @@ public class IndependentBeanShellInterface {
                         Levels level = parentGameGenerator.getCurrentLevels();
                         if (level != null) {
                                 Objectives o = level.getObjectives();
-                                if(o==null)System.out.println("FUCK");
-                                if (   (o.numHoles==-1 || o.numHoles == WorldUtils.numHoles(world))
-                                    && (o.height==-1 || o.height == WorldUtils.height(world))
-                                    && (o.heightUnder==-1 || WorldUtils.height(world) < o.heightUnder) )
-                                {
-                                        parentGameGenerator.objectivesMet();
-                                        break;
-                                }
+                                if(o != null)//Is this correct
+	                                if (   (o.numHoles==-1 || o.numHoles == WorldUtils.numHoles(world))
+	                                    && (o.height==-1 || o.height == WorldUtils.height(world))
+	                                    && (o.heightUnder==-1 || WorldUtils.height(world) < o.heightUnder) )
+	                                {
+	                                        parentGameGenerator.objectivesMet();
+	                                        break;
+	                                }
                         }
                     }
 
