@@ -1,11 +1,18 @@
-	package ruletris;
+package ruletris;
 
-	import bsh.EvalError;
-	import bsh.Interpreter;
-	import java.io.FileNotFoundException;
-	import java.io.IOException;
-	import java.util.logging.Level;
-	import java.util.logging.Logger;
+import bsh.EvalError;
+import bsh.Interpreter;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JTextField;
 	
 	
 	/*
@@ -14,21 +21,22 @@
 	 */
 
 public class IndependentBeanShellInterface {
-	    /*
+	     /*
 	     * Initializes the game and for each subsequent piece executes supplied
 	     * script until the game is over.
 	     */
 		private static boolean isOver = false;
+		//private static String errFile = "error";
 
-            private static GameGenerator parentGameGenerator = null; // parentGameGenerator is notified whenever a level is complete. Ignored if null.
+        private static GameGenerator parentGameGenerator = null; // parentGameGenerator is notified whenever a level is complete. Ignored if null.
 
-            public static void setParent (GameGenerator parent) {
+        public static void setParent (GameGenerator parent) {
                 parentGameGenerator = parent;
-            }
+        }
 	
 	    public static void run(String scriptFileName, World currentWorld) {
 	        World world = currentWorld;
-                WorldUI worldUI = world;
+            WorldUI worldUI = world;
 	        Interpreter inter = new Interpreter();    //BeanShell interpreter.
 	        
 	        /*
@@ -53,8 +61,9 @@ public class IndependentBeanShellInterface {
 	            } catch (IOException ex) {
 	                Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
 	            } catch (EvalError ex) {
-                        //TODO: Direct this message to a place visible by user.
-	                System.out.println(ex.getMessage());
+	            	world.errorOutput(ex.getMessage());
+	            	
+	            	break;
 	            }
 	            
 	            world.nextPieceOnGrid();
@@ -64,7 +73,7 @@ public class IndependentBeanShellInterface {
                         Levels level = parentGameGenerator.getCurrentLevels();
                         if (level != null) {
                                 Objectives o = level.getObjectives();
-                                if(o != null)//Is this correct
+                                if(o != null)//TODO: Is this correct? Dimitar
 	                                if (   (o.numHoles==-1 || o.numHoles == WorldUtils.numHoles(world))
 	                                    && (o.height==-1 || o.height == WorldUtils.height(world))
 	                                    && (o.heightUnder==-1 || WorldUtils.height(world) < o.heightUnder) )
@@ -82,5 +91,29 @@ public class IndependentBeanShellInterface {
 		public void isOver() 
 		{
 			isOver = true;// TODO Auto-generated method stub	
+		}
+
+		public void simulateWorld(String scriptFileName, World currentworld)
+		{
+			 World world = currentworld;
+	         WorldUI worldUI = world;
+		     Interpreter inter = new Interpreter();
+		     try
+		     {
+		         inter.set("world", worldUI);
+		         inter.source(scriptFileName);
+		     }
+		     catch (FileNotFoundException ex)
+		     {
+		         Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
+		     }
+		     catch (IOException ex)
+		     {
+		         Logger.getLogger(BeanShellInterface.class.getName()).log(Level.SEVERE, null, ex);
+		     }
+		     catch (EvalError ex)
+		     {
+		         world.errorOutput(ex.getMessage());
+		     }
 		}
 	}

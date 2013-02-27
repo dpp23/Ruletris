@@ -7,11 +7,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.io.*;
 import javax.swing.text.*;
-import javax.swing.JDialog.*;
-
 import ruletris.GameGenerator;
 import ruletris.LevelStep;
-import ruletris.Start;
 import ruletris.World;
 
 
@@ -25,7 +22,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.io.BufferedInputStream;
 
 public class JetrisMainFrame extends JFrame implements ActionListener  {
@@ -90,8 +86,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    class OutputBox extends JDialog {
 	    	
 	    	private boolean isHidden;
-	    	private JTextArea text = 
-	    		new JTextArea("");
+	    	private JTextArea text = new JTextArea("");
 	    	private JScrollPane scroll;
 	    	private JPanel panel = new JPanel(new BorderLayout())  
 	    	{
@@ -102,9 +97,9 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    	
 	    	
 	    	public OutputBox() {
-	    		super((Frame)null, "Ruletris Output");
+	    		super((Frame)null, "Error!!!");
 	    		
-	    		Dimension size = new Dimension(700, 200); 
+	    		Dimension size = new Dimension(500, 50); 
 	    		text.setPreferredSize(size); //(15,100)
 	    		text.setMaximumSize(size);
 	    		text.setMinimumSize(size);
@@ -222,6 +217,12 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		Action SaveAs = new AbstractAction("Save as...") {
 			public void actionPerformed(ActionEvent e) {
 				saveFileAs();
+			}
+		};
+		
+		Action errorOutput = new AbstractAction("Check for errors") {
+			public void actionPerformed(ActionEvent e) {
+				errorCheck();
 			}
 		};
 		
@@ -464,7 +465,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		// ....................ALL BUTTONS FROM HERE ON........................
         
         JButton bugButton = new JButton("Check For Errors");
-        
+        bugButton.setAction(errorOutput);
         //Cancel button
         JButton compileButton = new JButton("Compile");
         //Cancel button
@@ -620,8 +621,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			{
 				saveOld();
 			}
-			outputWindow.clearText();
-			outputWindow.Show();
+			//outputWindow.clearText();
+			//outputWindow.Show();
 			restart();
 			parent.runFullWorld(currentFile);
 	}
@@ -724,6 +725,24 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			nextLevelButton.setEnabled(true);
 		}
 		
+	}
+	
+	private void errorCheck()
+	{
+		if(currentFile == "default")
+		{
+			JOptionPane.showMessageDialog(this, "You must save the file before compiling");
+			saveFileAs();
+		}
+		else 
+		{
+			saveOld();
+		}
+		//outputWindow.clearText();
+		//outputWindow.Show();
+		world.setVisibility(false);
+		restart();
+		parent.runSimulationWorld(currentFile);
 	}
 	
 	
@@ -1553,4 +1572,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     {
     	world = x;
     }
+	public void errorOutput(String message)
+	{
+		OutputBox error = new OutputBox();
+		error.setText(message);
+		error.Show();		
+	}
 }

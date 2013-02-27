@@ -168,7 +168,6 @@ public class World implements WorldUI
 	public boolean dropPiece()
 	{
 		if(!isPieceDropped || isGameOver)return false;
-		System.out.println("SHIT");
 		mf.moveDrop();
 		if(visible)mf.updateGrid(1);
 		isPieceDropped = false;
@@ -196,6 +195,11 @@ public class World implements WorldUI
 		isPieceDropped = false;
 		nextPieceOnGrid();
 		mf.setFlag();
+	}
+
+	public void errorOutput(String message)
+	{
+		mf.errorOutput(message);
 	}
 	
 }

@@ -194,6 +194,13 @@ public class GameGenerator {
     	System.out.println();
 		
 	}
+
+	public void runSimulationWorld(String currentFile)
+	{
+		world.setVisibility(false);
+		bsi.simulateWorld(currentFile, world);
+		world.setVisibility(true);
+	}
 	
 
     
