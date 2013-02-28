@@ -1,4 +1,4 @@
-world.moveDown(18);
+weberberworld.moveDown(18);
 Thread.sleep(1000);
 System.out.println(world.moveLeft(2));
 world.dropPiece();

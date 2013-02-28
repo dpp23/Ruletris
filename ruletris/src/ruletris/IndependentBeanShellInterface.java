@@ -114,6 +114,8 @@ public class IndependentBeanShellInterface {
 		     catch (EvalError ex)
 		     {
 		         world.errorOutput(ex.getMessage());
+		         return;
 		     }
+		     world.errorOutput("No Errors! :)");
 		}
 	}

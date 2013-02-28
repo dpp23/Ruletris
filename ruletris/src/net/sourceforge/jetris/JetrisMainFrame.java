@@ -740,8 +740,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		}
 		//outputWindow.clearText();
 		//outputWindow.Show();
+		//restart();
 		world.setVisibility(false);
-		restart();
 		parent.runSimulationWorld(currentFile);
 	}
 	

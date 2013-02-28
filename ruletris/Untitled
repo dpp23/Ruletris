@@ -1,6 +1,1 @@
-Thread.sleep(500);
-world.moveDown(18);
-Thread.sleep(500);
-world.moveLeft(2);
-Thread.sleep(1000);
 world.dropPiece();
