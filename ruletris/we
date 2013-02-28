@@ -1,1 +1,4 @@
-vveve
+world.moveDown(18);
+Thread.sleep(1000);
+System.out.println(world.moveLeft(2));
+Thread.sleep(2000000);

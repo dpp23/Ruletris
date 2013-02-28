@@ -1,7 +1,5 @@
 package ruletris;
 
-import net.sourceforge.jetris.JetrisMainFrame;
-
 
 public class Start 
 {

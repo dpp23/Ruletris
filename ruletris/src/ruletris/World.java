@@ -152,14 +152,13 @@ public class World implements WorldUI
 		if(!isPieceDropped || isGameOver)return false;
 		while(m>0)
 		{
-			if(mf.moveDown())
+			if(!mf.moveDown())
 			{
-				isPieceDropped = false;
 				return false;
 			}
 			m--;
 		}
-		if(visible)mf.updateGrid(1);
+		//if(visible)mf.updateGrid(1);
 		return true;
 	}
 	

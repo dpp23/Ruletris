@@ -1327,10 +1327,13 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         }
     }
     
-    public boolean moveDown() {
+    public boolean moveDown()
+    {
         if(isGameOver || isPause) return false;
         nextY++;
-        return nextMove();
+        if (nextMove()) return true;
+        //nextY--;
+        return true;
     }
     public void addFigure()
     {
@@ -1339,7 +1342,6 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     }
     public void moveDrop() {
         if(isGameOver || isPause) return;
-        
         f.offsetYLast = f.offsetY;
         f.offsetXLast = f.offsetX;        
         if(singleLiner)
