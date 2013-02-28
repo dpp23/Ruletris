@@ -371,7 +371,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         singleLiner = false;
        
         parent = gameGenerator; 
-        SplashScreen sp = new SplashScreen();
+        //SplashScreen sp = new SplashScreen();
         
         setIconImage(loadImage("jetris16x16.png"));
         
@@ -545,8 +545,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
         setVisible(true);
-        sp.setVisible(false);
-        sp.dispose();
+        //sp.setVisible(false);
+        //sp.dispose();
         
     }
     private KeyListener k1 = new KeyAdapter() {
@@ -1184,9 +1184,9 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
             return null;
         }
     }
-    //returns true if the piece falls to the ground
-    public boolean nextMove() {
-    	boolean res = false;
+    
+    public boolean nextMove()
+    {
     	if(f.toArray()[0][0]==-1)return true; 
        
         if(singleLiner)
@@ -1200,15 +1200,15 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         {
         	f.setOffset(nextX, nextY);
 	        if(tg.addFigure(f)) {
+	        	 paintNewPosition();
 	        	return true;
 	        } else {
 	            clearOldPosition();
 	        }
-        }    
+        }
         paintNewPosition();
         singleLiner = false;
-        res = true;
-        return res;
+        return true;
     }
     
     private void clearOldPosition() {
