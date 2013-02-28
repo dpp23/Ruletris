@@ -1207,20 +1207,21 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         }    
         paintNewPosition();
         singleLiner = false;
+        res = true;
         return res;
     }
     
     private void clearOldPosition() {
         for (int j = 0; j < 4; j++) {
             cells[f.arrY[j]+f.offsetYLast][f.arrX[j]+f.offsetXLast].setBackground(Color.WHITE);
-            cells[f.arrY[j]+f.offsetYLast][f.arrX[j]+f.offsetXLast].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            //cells[f.arrY[j]+f.offsetYLast][f.arrX[j]+f.offsetXLast].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }
     }
     
     private void paintNewPosition() {
         for (int j = 0; j < 4; j++) {
             cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBackground(f.getGolor());
-            cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            //cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         } 
     }
     
@@ -1240,10 +1241,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
                     default: c = Figure.COL_Z; break;
                     }
                     cells[i][j].setBackground(c);
-                    cells[i][j].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+                    //cells[i][j].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
                 } else {
                     cells[i][j].setBackground(Color.WHITE);
-                    cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+                    //cells[i][j].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
                 } 
             }
             i++;
@@ -1253,13 +1254,13 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 next[i][j].setBackground(nextBg);
-                next[i][j].setBorder(BorderFactory.createEmptyBorder());
+                //next[i][j].setBorder(BorderFactory.createEmptyBorder());
             }
         }
         
         for (int j = 0; j < f.arrX.length; j++) {
             next[f.arrY[j]][f.arrX[j]].setBackground(f.getGolor());
-            next[f.arrY[j]][f.arrX[j]].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            //next[f.arrY[j]][f.arrX[j]].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         }
     }
     private void showNext(Figure f) {
@@ -1331,9 +1332,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     {
         if(isGameOver || isPause) return false;
         nextY++;
-        if (nextMove()) return true;
-        //nextY--;
-        return true;
+        return nextMove();
     }
     public void addFigure()
     {
@@ -1377,7 +1376,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         if(isGameOver || isPause) return;
         for (int j = 0; j < f.arrX.length; j++) {
             cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBackground(Color.WHITE);
-            cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            //cells[f.arrY[j]+f.offsetY][f.arrX[j]+f.offsetX].setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }
         f.rotationRight();
         if(!tg.isNextMoveValid(f,f.offsetX,f.offsetY)) {

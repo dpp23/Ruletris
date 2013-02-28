@@ -1,2 +1,6 @@
-System.out.println(world.dropPiece());
-Thread.sleep(2000)i;
+Thread.sleep(500);
+world.moveDown(18);
+Thread.sleep(500);
+world.moveLeft(2);
+Thread.sleep(1000);
+world.dropPiece();
