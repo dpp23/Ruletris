@@ -158,7 +158,7 @@ public class World implements WorldUI
 			}
 			m--;
 		}
-		//if(visible)mf.updateGrid(1);
+		if(visible)mf.updateGrid(1);
 		return true;
 	}
 	
