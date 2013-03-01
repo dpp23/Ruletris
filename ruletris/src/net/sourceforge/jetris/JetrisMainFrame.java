@@ -4,6 +4,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.MouseInputListener;
+
 import java.awt.*;
 import java.io.*;
 import javax.swing.text.*;
@@ -17,14 +21,17 @@ import net.sourceforge.jetris.io.PublishHiScore;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 
-public class JetrisMainFrame extends JFrame implements ActionListener  {
+public class JetrisMainFrame extends JFrame implements ActionListener, MouseInputListener, KeyListener, DocumentListener, FocusListener  {
     
 	 /**
 		 * 
@@ -76,13 +83,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    private JPanel hiScorePanel;
 	    private PublishHandler pH;
 	    private int count =0;
-	    
-	    
+	
 	    /*
-	     *  ------------- Added by oeb21 -------------
+	     * The output box class is an exension of a JDialog to allow the output of 
+	     * the interpreter to be printed to the screen.
 	     */
-	    
-	    
 	    class OutputBox extends JDialog {
 	    	
 	    	private boolean isHidden;
@@ -95,21 +100,18 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    		}
 	    	};
 	    	
-	    	
 	    	public OutputBox() {
 	    		super((Frame)null, "Error!!!");
-	    		
 	    		Dimension size = new Dimension(500, 50); 
 	    		text.setPreferredSize(size); //(15,100)
 	    		text.setMaximumSize(size);
 	    		text.setMinimumSize(size);
-	    		
 	    		text.setEditable(false);
-	  
-	    		
-	    		
 	    		
 	    		scroll =  new JScrollPane(text);
+	    		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	            scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
 	    		panel.add(scroll);
 	    		getContentPane().add(panel, BorderLayout.CENTER);
 
@@ -153,24 +155,25 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 	    	}
 	    }
 	    
+	    /* Create the parent game to use */
 	    private GameGenerator parent;
 	    
 		/* This is the game panel for the tetris */
 	    JPanel all = new JPanel(new BorderLayout());
 	    JPanel panel = new JPanel(new MigLayout("fillx,insets 3"));
 
-	    
+	    /* create an output window */
 	    private OutputBox outputWindow = new OutputBox();
 	    
-	    
+	    /* Create all the text windows needed for editing and showing help */
 	    private String currentFile = "Untitled";
 		private boolean changed = false;
-
-		
-		private JEditorPane editArea = new JEditorPane();
 		private JEditorPane helpArea = new JEditorPane();
-		
-		
+		private JTextArea editArea = new JTextArea();
+		private JTextArea lineArea = new JTextArea("1");
+		private Highlighter highlighter;
+	 
+		/* Create buttons */
 	    JButton prevHelpButton = new JButton("Prev");
 	    JButton nextHelpButton = new JButton("Next");
 	    JButton nextLevelButton = new JButton("Next Level");
@@ -179,12 +182,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		private String currentDoc = "default";
 		private boolean fileChanged = false;
 			
-		/*
-		 * -----------end of added by Ollie----------------
-		 */
-		
-		
-		
+
+		/* Add actions for the buttons */
 		Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -199,9 +198,9 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 					readInFile(dialog.getSelectedFile().getAbsolutePath());
 				}
 				SaveAs.setEnabled(true);
+				insertUpdate(null);
 			}
 		};
-		
 		
 		Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
 			public void actionPerformed(ActionEvent e) {
@@ -211,8 +210,6 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 					saveFileAs();
 			}
 		};
-		
-
 		
 		Action SaveAs = new AbstractAction("Save as...") {
 			public void actionPerformed(ActionEvent e) {
@@ -238,7 +235,6 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			}
 		};
 		
-		
 		Action nextHelp = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				getNextHelp();
@@ -262,14 +258,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		Action Copy = m.get(DefaultEditorKit.copyAction);
 		Action Paste = m.get(DefaultEditorKit.pasteAction);
 		
-		
-		/*
-		 * -------------------------------------------
-		 */
+		/* End of actions for buttons.*/
 	   
     
-   
-    
+	/* This is time keeping for the game */ 
     private class TimeThread extends Thread {
         
         private int hours;
@@ -365,11 +357,15 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
             }
         }
     }
+    
+    
+    /* the constructor */
     public JetrisMainFrame(GameGenerator gameGenerator) {
         super(NAME);
         
         singleLiner = false;
        
+        /* Take in the game generator that created the UI */
         parent = gameGenerator; 
         //SplashScreen sp = new SplashScreen();
         
@@ -389,17 +385,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
                     rotation();
                 } else if(code == KeyEvent.VK_SPACE) {
                     moveDrop();
-                } /*else if(code == KeyEvent.VK_R) { //Only for the applet needed
-                    restart();
-                } else if(code == KeyEvent.VK_P) {
-                    pause();
-                } */
+                }
             }
         };
-        //addKeyListener(keyHandler); Manual control ommited
-        
-        //pH = new PublishHandler();
-        
+
         font = new Font("Dialog", Font.PLAIN, 12);
         tg = new TetrisGrid();
         ff = new FigureFactory();
@@ -425,11 +414,25 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         JPanel textEditorPanel = new JPanel(new BorderLayout());
         textEditorPanel.setBackground(Color.GRAY);
         
-    //    editArea.setLineWrap(false);
         editArea.setFont(new Font("Monospaced",Font.PLAIN,12));
         
-        JScrollPane scroll = new JScrollPane(editArea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        /* Setup scroll pane */
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll.getViewport().add(editArea);
+        scroll.setRowHeaderView(lineArea);
+		
+        /* Setup the text area. */
+        editArea.getDocument().addDocumentListener(this);
         
+        /* Generate the highlighter */
+        highlighter = editArea.getHighlighter();
+        
+        /* Setup the lines */
+        setupLines();
+        
+        /* Setup the toolbar for new, save, open, copy, cut, paste */
         JToolBar tool = new JToolBar();
 		
 		JButton new_b = tool.add(New), 
@@ -442,7 +445,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 				cop_b = tool.add(Copy),
 				pas_b = tool.add(Paste);
 		
-		
+		/* Set the icons for the buttons */
 		new_b.setText(null); new_b.setIcon(new ImageIcon("icons/new.png"));
 		ope_b.setText(null); ope_b.setIcon(new ImageIcon("icons/open.png"));
 		sav_b.setText(null); sav_b.setIcon(new ImageIcon("icons/save.png"));
@@ -521,11 +524,12 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		
         JScrollPane helpscroll = new JScrollPane(helpArea,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+        /* Add the scroll and button panels to the help panel */
         HelpPanel.add(helpscroll, "span");   // Span without "count" means span whole row.
 		HelpPanel.add(helpButtonPanel)  ;    // Wrap to next row
 		
 		
-        // Putting it all togethher. 
+        /* Putting the game, editor and help panels into one panel */
         JPanel panel = new JPanel(new MigLayout("fillx,insets 3"));
 
         panel.add(all);
@@ -549,6 +553,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         //sp.dispose();
         
     }
+    
+    
     private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
 			changed = true;
@@ -556,7 +562,19 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			SaveAs.setEnabled(true);
 		}
 	};
-    
+
+	
+	public String getText(){
+		int caretPosition = editArea.getDocument().getLength();
+		Element rootEl = editArea.getDocument().getDefaultRootElement();
+		String text = "1\n";
+		for(int i = 2; i < rootEl.getElementIndex( caretPosition ) + 2; i++)
+			text += i + "\n";
+		return text;
+	}
+	
+	
+	
 	private void saveFileAs() {
 		if(dialog.showSaveDialog(null)==JFileChooser.APPROVE_OPTION)
 			saveFile(dialog.getSelectedFile().getAbsolutePath());
@@ -782,6 +800,16 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 			prevHelpButton.setEnabled(false);
 		}
 	}
+	
+	private void setupLines()
+	{
+		lineArea.setBackground(Color.LIGHT_GRAY);
+		lineArea.setEditable(false);
+		lineArea.addMouseListener(this);
+		lineArea.addFocusListener(this);
+	}
+	
+	
     public Figure getFigure()
     {
     	return fNext;
@@ -1260,7 +1288,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
         
         for (int j = 0; j < f.arrX.length; j++) {
             next[f.arrY[j]][f.arrX[j]].setBackground(f.getGolor());
-            //next[f.arrY[j]][f.arrX[j]].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+            next[f.arrY[j]][f.arrX[j]].setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         }
     }
     private void showNext(Figure f) {
@@ -1341,6 +1369,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
     }
     public void moveDrop() {
         if(isGameOver || isPause) return;
+        
         f.offsetYLast = f.offsetY;
         f.offsetXLast = f.offsetX;        
         if(singleLiner)
@@ -1578,5 +1607,98 @@ public class JetrisMainFrame extends JFrame implements ActionListener  {
 		OutputBox error = new OutputBox();
 		error.setText(message);
 		error.Show();		
+	}
+
+	
+	/* This method is invoked when the mouse clicks on the editArea */
+	public void mouseClicked(MouseEvent mEvent) 
+	{
+		/* Want to have a boudle click */
+	/*	if(mEvent.getClickCount() == 2)
+		{
+			try 
+			{
+				int caretPos = lineArea.getCaretPosition();
+				int lineOffset = lineArea.getLineOfOffset(caretPos);
+				if(lineArea.getText().charAt(caretPos-1) == '\n')
+					lineOffset--;
+				highlighter.addHighlight(editArea.getLineStartOffset(lineOffset),
+										 editArea.getLineEndOffset(lineOffset), 
+										 new Highlighter(Color.cyan));
+			} 
+			catch (BadLocationException e) 
+			{
+				e.printStackTrace();
+			}
+		} */
+	}
+	
+	
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void focusGained(FocusEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* If highlighter loses focus then get rid of it */
+	public void focusLost(FocusEvent arg0) {
+		highlighter.removeAllHighlights();
+	}
+	
+	
+	/* Here we must update the lineArea to show the current line numbers of the lines currently
+	 * visible to the user. 
+	 */
+	public void changedUpdate(DocumentEvent de) {
+		lineArea.setText(getText());
+	}
+	public void insertUpdate(DocumentEvent de) {
+		lineArea.setText(getText());
+	}
+	public void removeUpdate(DocumentEvent de) {
+		lineArea.setText(getText());
+	}
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void keyTyped(KeyEvent arg0) {
+		lineArea.setText(getText());
 	}
 }
