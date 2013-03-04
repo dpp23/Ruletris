@@ -90,12 +90,21 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 	     */
 	    class OutputBox extends JDialog {
 	    	
-	    	private boolean isHidden;
+	    	/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			private boolean isHidden;
 	    	private JTextArea text = new JTextArea("");
 	    	private JScrollPane scroll;
 	    	private JPanel panel = new JPanel(new BorderLayout())  
 	    	{
-	    		public Insets getInsets() {
+	    		/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				public Insets getInsets() {
 	    			return new Insets(5, 10, 5, 5);
 	    		}
 	    	};
@@ -185,6 +194,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 
 		/* Add actions for the buttons */
 		Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) 
 			{
 					newFile();
@@ -192,6 +206,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		};
 		
 		Action Open = new AbstractAction("Open", new ImageIcon("open.gif")) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				saveOld();
 				if(dialog.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
@@ -203,6 +222,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		};
 		
 		Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				if(!currentFile.equals("Untitled"))
 					saveFile(currentFile);
@@ -212,41 +236,76 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		};
 		
 		Action SaveAs = new AbstractAction("Save as...") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				saveFileAs();
 			}
 		};
 		
 		Action errorOutput = new AbstractAction("Check for errors") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				errorCheck();
 			}
 		};
 		
 		Action Compile = new AbstractAction("Compile") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				compileCode();
 			}
 		};
 		
 		Action Hide = new AbstractAction("Toggle Output") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				hideTetris();
 			}
 		};
 		
 		Action nextHelp = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				getNextHelp();
 			}
 		};
 		
 		Action prevHelp = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				getPrevHelp();
 			}
 		};
 		Action nextLevel = new AbstractAction("Next Level") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				getNextLevel();
 			}
@@ -335,10 +394,12 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
             return sb.toString();
         }
     }
+    
     public boolean isGameOver()
     {
     	return isGameOver;
     }
+    
     public void updateGrid(int n)
     {
     	while (n>0)
@@ -651,25 +712,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		
 		if(newHelp != null)
 		{
-			helpArea.setText("");
-			helpArea.setText(newHelp.getHelpText());
-			
-			
-			String[] lines = newHelp.getInjectCode().split("@");
-			for(String s : lines)
-			{
-				editArea.setText(editArea.getText()+s+"\n");
-			}
-
-			if(newHelp.isLast())
-			{
-				nextHelpButton.setEnabled(false);
-				nextLevelButton.setEnabled(true);
-			}
-			if(!newHelp.isFirst())
-			{
-				prevHelpButton.setEnabled(true);
-			}
+			setupHelp(newHelp, true);
 		}
 	}
 	
@@ -703,18 +746,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 	
 		if(newHelp != null)
 		{
-			helpArea.setText("");
-			helpArea.setText(newHelp.getHelpText());
-		
-			if(newHelp.isFirst())
-			{
-				prevHelpButton.setEnabled(false);
-			}
-			if(!newHelp.isLast())
-			{
-				nextHelpButton.setEnabled(true);
-				nextLevelButton.setEnabled(false);
-			}
+			setupHelp(newHelp, false);
 		}
 	}
 	
@@ -724,17 +756,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		LevelStep first = parent.getCurrentHelp();
 		if (first != null)
 		{
-			helpArea.setText(first.getHelpText());
-			editArea.setText(editArea.getText()+first.getInjectCode());
-			if(first.isLast())
-			{
-				nextHelpButton.setEnabled(false);
-				nextLevelButton.setEnabled(true);
-			}
-			else
-			{
-				nextLevelButton.setEnabled(false);
-			}
+			setupHelp(first, true);
 			
 		}
 		else
@@ -766,6 +788,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 	
 	private void getNextLevel()
 	{
+		restart();
+	//	gameOver = true;
 		if(parent.getNewLevel())
 		{
 			LevelStep first = parent.getCurrentHelp();
@@ -773,18 +797,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 			{
 				outputWindow.clearText();
 				outputWindow.Hide();
-				helpArea.setText(first.getHelpText());
-				prevHelpButton.setEnabled(false);
-				if(first.isLast())
-				{
-					nextHelpButton.setEnabled(false);
-					nextLevelButton.setEnabled(true);
-				}
-				else
-				{
-					nextLevelButton.setEnabled(false);
-					nextHelpButton.setEnabled(true);
-				}
+				setupHelp(first, false);
 			}
 			else
 			{
@@ -809,6 +822,47 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		lineArea.addFocusListener(this);
 	}
 	
+	private void setupHelp(LevelStep help, boolean addInjectText) 
+	{
+		helpArea.setText("");
+		helpArea.setText(help.getHelpText());
+		
+		if(addInjectText) 
+		{
+			String[] lines = help.getInjectCode().split("@");
+			for(String s : lines)
+			{
+				editArea.setText(editArea.getText()+s+"\n");
+			}
+		}
+		
+		if(help.isFirst())
+		{
+			prevHelpButton.setEnabled(false);
+		}
+		else 
+		{
+			prevHelpButton.setEnabled(true);
+		}
+		
+		if(help.isLast())
+		{
+			nextHelpButton.setEnabled(false);
+			nextLevelButton.setEnabled(true);
+			// TODO: add objectives check here and elsewhere
+		}
+		else 
+		{
+			nextHelpButton.setEnabled(true);
+			nextLevelButton.setEnabled(false);			
+		}
+		
+		//TODO: configure composition of blocks
+		
+		//TODO: configure initial layout - not currently working
+		//world.setGrid(help.getPresetLayout());
+		
+	}
 	
     public Figure getFigure()
     {
@@ -1321,9 +1375,10 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
         levelLabel.setText(tg.getLevel()+" / 20");
 
         f = fNext;
-        fNext = ff.getRandomFigure();
-        
-        
+        LevelStep currentHelp = parent.getCurrentHelp();
+        if(currentHelp != null) { fNext = ff.getOneOfFigures(currentHelp.getAllowedBlocks()); } 
+        else { fNext = ff.getRandomFigure(); }
+   
         isGameOver = tg.isGameOver(f);
         if (isGameOver)
         {
@@ -1430,7 +1485,9 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
         ff.resetCounts();
         isGameOver = false;
         isPause = false;
-        fNext = ff.getRandomFigure();
+        LevelStep currentHelp = parent.getCurrentHelp();
+        if(currentHelp != null) { fNext = ff.getOneOfFigures(currentHelp.getAllowedBlocks()); } 
+        else { fNext = ff.getRandomFigure(); }
         //tt.resetTime();
         //time.setText("00:00:00");
         tg.resetStats();

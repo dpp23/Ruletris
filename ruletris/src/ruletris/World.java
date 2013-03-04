@@ -1,12 +1,7 @@
 package ruletris;
 
-import java.awt.Component;
-
 import javax.swing.JOptionPane;
 
-import net.sourceforge.jetris.*;
-import java.awt.Component;
-import javax.swing.JOptionPane;
 import net.sourceforge.jetris.*;
 
 public class World implements WorldUI

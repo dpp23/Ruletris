@@ -12,7 +12,11 @@ import javax.swing.JWindow;
 
 public class SplashScreen extends JWindow {
     
-    private static final int W = 567;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final int W = 567;
     private static final int H = 191;
     
     SplashScreen() {

@@ -11,7 +11,12 @@ import javax.swing.JOptionPane;
 
 public class TetrisGrid implements Serializable{
     
-    static final String DAT_FILE = "JETRIS.DAT";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	static final String DAT_FILE = "JETRIS.DAT";
     
     LinkedList<int[]> gLines;
     private int lines;
@@ -128,7 +133,7 @@ public class TetrisGrid implements Serializable{
     
     private void eliminateLines() {
         int lines = 0;
-        for (Iterator iter = gLines.iterator(); iter.hasNext();) {
+        for (Iterator<int[]> iter = gLines.iterator(); iter.hasNext();) {
             int[] el = (int[]) iter.next();
             boolean isFull = true;
             for (int j = 0; j < 10; j++) {

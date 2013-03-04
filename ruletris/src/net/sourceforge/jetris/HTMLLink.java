@@ -8,6 +8,7 @@ import java.awt.datatransfer.*;
 
 import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class HTMLLink extends JLabel implements MouseListener{
     
     private String url;
@@ -36,7 +37,8 @@ public class HTMLLink extends JLabel implements MouseListener{
     private void startBrowser() {
         String cmdLine = "cmd.exe /c start " + url;
         try {
-            Process p = Runtime.getRuntime().exec(cmdLine);
+            @SuppressWarnings("unused")
+			Process p = Runtime.getRuntime().exec(cmdLine);
         } catch (Exception e) {
             e.printStackTrace();
         }

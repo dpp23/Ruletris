@@ -42,16 +42,16 @@ public class TutorialManager
 		return level.getPrevHelp();
 	}
 	
-	public int[][] getNextSetup() 
+	public int[][] getSetup() 
 	{
-		return null;	
+		return level.getCurrentHelp().getPresetLayout();	
 	}
 
-        // Needed by InderpendentBeanShellInterface
-        public Levels getCurrentLevels ()
-        {
-                return level;
-        }
+    // Needed by IndependentBeanShellInterface
+    public Levels getCurrentLevels ()
+    {
+        return level;
+    }
 	
 	public boolean loadNextLevel()
 	{

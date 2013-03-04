@@ -4,6 +4,8 @@ public class LevelStep {
 
 	private  String helpText;
 	private  String codeText;
+	private  boolean[] allowedBlocks; 
+	private  int[][] presetLayout;
 	private  boolean last;
 	private  boolean first;
 	private  LevelStep next; 
@@ -13,6 +15,10 @@ public class LevelStep {
 	{
 		helpText = "";
 		codeText = ""; 
+		allowedBlocks = new boolean[7];
+		for (int i = 0; i < 7; i++) { allowedBlocks[i] = true; }
+		presetLayout = new int[20][10];
+		for (int i = 0; i < 20; i++) { for (int j = 0; j < 10; j++) { presetLayout[i][j] = 0; } }
 		first = false;
 		last = false;
 		next = null; 
@@ -30,7 +36,25 @@ public class LevelStep {
 	public boolean isFirst()     { return first; }
 
 	public void addHelpText(String text)    { helpText += text; }
-	public void addInjectCode(String code)  { codeText += code; }	
+	public void addInjectCode(String code)  { codeText += code; }
+	
+	public void addBlockSpecification(boolean[] blocks) 
+	{ 
+		if(blocks.length == 7) 
+			allowedBlocks = blocks;
+		else 
+			System.err.println("Incorrect length of block specification.");
+	}
+	
+	public void addPresetLayout(int[][] layout) 
+	{
+		if(layout.length == 20 && layout[0].length == 10) 
+		{
+			presetLayout = layout;
+		}
+		else
+			System.err.println("Incorrect dimensions of preset layout.");
+	}
 	
 	public String getInjectCode()
 	{
@@ -40,5 +64,15 @@ public class LevelStep {
 	public String getHelpText()
 	{
 		return helpText;
-	}	
+	}
+	
+	public boolean[] getAllowedBlocks() 
+	{
+		return allowedBlocks;
+	}
+	
+	public int[][] getPresetLayout()
+	{
+		return presetLayout;
+	}
 }
