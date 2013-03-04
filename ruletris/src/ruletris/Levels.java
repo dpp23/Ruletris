@@ -139,7 +139,7 @@ public class Levels {
 						        DataInputStream configIn = new DataInputStream(cfStream);
 						        BufferedReader configReader = new BufferedReader(new InputStreamReader(configIn));
 						        String configLine = configReader.readLine();
-						        int height = Integer.parseInt(configLine) - 1;
+						        int height = 20 - Integer.parseInt(configLine);
 						        int[][] layout = new int[20][10];
 						        for(int i = 0; i < 20; i++) { for(int j = 0; j < 10; j++) { layout[i][j] = 0; } }
 								while ((configLine = configReader.readLine()) != null) 
@@ -148,7 +148,7 @@ public class Levels {
 									{
 										if (configLine.charAt(j) == '1') { layout[height][j] = 1; }
 									}
-									height--;
+									height++;
 								}
 								current.addPresetLayout(layout);
 					        }
