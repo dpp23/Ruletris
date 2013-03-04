@@ -67,6 +67,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 	    private KeyListener keyHandler;
 	    private World world;
 	   
+        private JCheckBox lockLevelCheckbox;
 	    private JPanel about;
 	    
 	    //MENU
@@ -994,6 +995,11 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
         jp.add(Box.createHorizontalGlue());
         r.add(jp);
         r.add(nextP);
+
+        
+        lockLevelCheckbox = new JCheckBox("Lock piece to level", true);
+        r.add(lockLevelCheckbox);
+        
         
         r.add(Box.createRigidArea(new Dimension(100, 10)));
         
@@ -1376,7 +1382,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 
         f = fNext;
         LevelStep currentHelp = parent.getCurrentHelp();
-        if(currentHelp != null) { fNext = ff.getOneOfFigures(currentHelp.getAllowedBlocks()); } 
+        if ((currentHelp != null)&&lockLevelCheckbox.isSelected()) { fNext = ff.getOneOfFigures(currentHelp.getAllowedBlocks()); } 
         else { fNext = ff.getRandomFigure(); }
    
         isGameOver = tg.isGameOver(f);
@@ -1486,7 +1492,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
         isGameOver = false;
         isPause = false;
         LevelStep currentHelp = parent.getCurrentHelp();
-        if(currentHelp != null) { fNext = ff.getOneOfFigures(currentHelp.getAllowedBlocks()); } 
+        if ((currentHelp != null)&&lockLevelCheckbox.isSelected()) { fNext = ff.getOneOfFigures(currentHelp.getAllowedBlocks()); } 
         else { fNext = ff.getRandomFigure(); }
         //tt.resetTime();
         //time.setText("00:00:00");
