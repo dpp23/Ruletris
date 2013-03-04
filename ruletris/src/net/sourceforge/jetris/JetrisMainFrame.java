@@ -37,7 +37,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private static final String NAME = "RULETRIS 0.1";
+		private static final String NAME = "RULETRIS 1.1";
 	    private static final int CELL_H = 24;
 	    
 	    private Font font;
@@ -895,7 +895,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
         
         JMenu mJetris = new JMenu();
         menu.add(mJetris);
-        mJetris.setText("Jetris");
+        mJetris.setText("Ruletris");
         mJetris.setMnemonic('J');
         {
             jetrisRestart = new JMenuItem("Restart");
@@ -910,13 +910,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
             jetrisPause.addActionListener(mH);
             jetrisPause.setMnemonic('P');
             
-            mJetris.addSeparator();
-            
-            jetrisHiScore = new JMenuItem("HiScore...");
-            mJetris.add(jetrisHiScore);
-            setKeyAcceleratorMenu(jetrisHiScore, 'H',0);
-            jetrisHiScore.addActionListener(mH);
-            jetrisHiScore.setMnemonic('H');
+        
             
             mJetris.addSeparator();
             
@@ -926,7 +920,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
             jetrisExit.addActionListener(mH);
             jetrisExit.setMnemonic('X');
         }
-        
+        /*
         JMenu mHelp = new JMenu();
         menu.add(mHelp);
         mHelp.setText("Help");
@@ -942,7 +936,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
             mHelp.add(helpAbout);
             helpAbout.addActionListener(mH);
             helpAbout.setMnemonic('A');
-        }
+        }*/
     }
     
     private void setKeyAcceleratorMenu(JMenuItem mi, int keyCode, int mask) {
