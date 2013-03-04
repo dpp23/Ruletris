@@ -26,6 +26,8 @@ public class GameGenerator {
     	tut = new TutorialManager(1,4);
     	mf = new JetrisMainFrame(this);
     	world = new World(mf);
+    	mf.getFirstHint();
+    	
     	//world.setVisibility(false);
     	bsi = new IndependentBeanShellInterface();
 

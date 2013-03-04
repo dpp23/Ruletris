@@ -606,7 +606,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
         fNext = ff.getFigure(-1);
         isNewFigureDroped = true;
         
-        getFirstHint();
+        //getFirstHint();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
         setVisible(true);
@@ -750,7 +750,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		}
 	}
 	
-	private void getFirstHint()
+	public void getFirstHint()
 	{
 		
 		LevelStep first = parent.getCurrentHelp();
@@ -822,7 +822,7 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 		lineArea.addFocusListener(this);
 	}
 	
-	private void setupHelp(LevelStep help, boolean addInjectText) 
+	public void setupHelp(LevelStep help, boolean addInjectText) 
 	{
 		helpArea.setText("");
 		helpArea.setText(help.getHelpText());
@@ -857,10 +857,8 @@ public class JetrisMainFrame extends JFrame implements ActionListener, MouseInpu
 			nextLevelButton.setEnabled(false);			
 		}
 		
-		//TODO: configure composition of blocks
 		
-		//TODO: configure initial layout - not currently working
-		//world.setGrid(help.getPresetLayout());
+		world.setGrid(help.getPresetLayout());
 		
 	}
 	
